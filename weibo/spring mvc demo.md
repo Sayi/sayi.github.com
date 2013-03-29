@@ -63,7 +63,7 @@
 * 配置View层的解析
 
 3. Controller层  
-  @Controller
+  <code>@Controller
   public class UserController {
   
   	@Autowired
@@ -79,7 +79,7 @@
   			return "login";
   		}
   	}
-  }
+  }</code>
 * Controller声明此为控制器
 * @Autowired自动注入
 * RequestMapping配置映射的URL
@@ -146,7 +146,7 @@
 * 注入jdbcTemplete
 
 6.login页面：
-  <form action="login" method="post">
+ <code> <form action="login" method="post">
       <span style="color:red;">${errorMsg}</span>
     	<div>
     		<input type="text" name="name" placeholder="UserName/Email" value="${user.name}"/>
@@ -158,5 +158,5 @@
     		<input type="submit" value="Login" /> <a href="javascript:;">forget
     			password?</a>
     	</div>
-  </form>
+  </form></code>
 * 注意其中的name和pwd需要和实体User中的变量名相同
