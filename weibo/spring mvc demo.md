@@ -63,7 +63,7 @@
 * 配置View层的解析
 
 3. Controller层  
-  <code>@Controller
+  @Controller
   public class UserController {
   
   	@Autowired
@@ -79,7 +79,7 @@
   			return "login";
   		}
   	}
-  }</code>
+  }
 * Controller声明此为控制器
 * @Autowired自动注入
 * RequestMapping配置映射的URL
@@ -145,8 +145,8 @@
 * Resposity声明DAO
 * 注入jdbcTemplete
 
-6.login页面：
- <code> <form action="login" method="post">
+6.login页面:  
+<code> <form action="login" method="post">
       <span style="color:red;">${errorMsg}</span>
     	<div>
     		<input type="text" name="name" placeholder="UserName/Email" value="${user.name}"/>
