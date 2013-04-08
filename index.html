@@ -1,22 +1,46 @@
 <!doctype html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Sayi</title>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<title>Sayi</title>
 
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <!--[if lt IE 9]>
+<link rel="stylesheet" href="stylesheets/styles.css">
+<link rel="stylesheet" href="stylesheets/pygment_trac.css">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, user-scalable=no">
+<!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    
-    <style type="text/css">
-    	body{
-    		
-    	}
-    </style>
+
+<style type="text/css">
+body{
+
+}
+footer {
+	width: 500px;
+	float: right;
+	padding-bottom: 50px;
+}
+ul{
+list-style: none;
+}
+ul li{
+margin-bottom: 5px;
+}
+h2{
+font-family: 'Comic Sans MS';
+}
+ul{
+margin: 0;
+}
+span{
+float: right;
+}
+section{
+background: url("img/backgroud.png") repeat;
+}
+</style>
 </head>
 <body>
 	<div class="wrapper">
@@ -30,46 +54,44 @@
 				而你微笑的面容极浅极淡 <br /> 逐渐隐没在日落后的群岚 <br /> <br /> 遂翻开那发黄的扉页 <br />
 				命运将它装订得极为拙劣 <br /> 含著泪 我一读再读 <br /> 却不得不承认 <br /> 青春是一本太仓促的书<br />
 			</p>
-			<p>
-				<a id="weibo" href="javascript:;">Weibo</a><br/>
-				<a id="spring" href="javascript:;">Spring web MVC</a><br/>
-				<a id="bootstrap" href="javascript:;">Bootstrap</a><br/>
-				<a id="bootstrap" href="javascript:;">JavaScript</a><br/>
-				<a id="bootstrap" href="javascript:;">UML</a><br/>
-			</p>
+			<!-- <audio src="/i/horse.ogg" >
+			</audio> -->
+			
 		</header>
 		<section>
-			<div class="weibo" style="display: none;">
-				<div>
-					<a href="weibo/spring mvc demo.md"><h3>Spring MVC Demo</h3></a>
-	
-					<p>This automatic page generator is the easiest way to create
-						beautiful pages for all of your projects. Author your page content
-						here using GitHub Flavored Markdown, select a template crafted by a
-						designer, and publish. After your page is generated, you can check
-						out the new branch....</p>
-					
-				</div>
-			</div>
-			<div class="spring" style="display: none;"></div>
-			<div class="bootstrap" style="display: none;"></div>
+			<h2>Contents</h2>
+			<ul>
+				<li><a id="weibo" href="javascript:;">Weibo</a></li>
+				<li><a id="spring" href="javascript:;">Spring web MVC</a></li>
+				<li><a id="bootstrap" href="javascript:;">Bootstrap</a></li>
+				<li><a id="bootstrap" href="javascript:;">JavaScript</a></li>
+				<li>
+					<ul>
+						<li><a href="javascript:;">Jquery</a></li>
+						<li><a href="javascript:;">DOJO</a></li>
+					</ul>
+				</li>
+				<li><a id="bootstrap" href="javascript:;">UML</a></li>
+				<li><a id="weibo" href="javascript:;">Weibo</a></li>
+				<li><a id="spring" href="javascript:;">Spring web MVC</a></li>
+				<li><a id="bootstrap" href="javascript:;">Bootstrap</a></li>
+				<li><a id="bootstrap" href="javascript:;">Bootstrap</a></li>
+				<li><a id="bootstrap" href="javascript:;">JavaScript</a></li>
+				<li>
+					<ul>
+						<li><a href="javascript:;">Jquery</a></li>
+						<li><a href="javascript:;">DOJO</a></li>
+					</ul>
+				</li>
+				<li><a id="bootstrap" href="javascript:;">UML in eclipse for test and xml in eclipse for test</a></li>
+			</ul>
 		</section>
-		
-		<footer>
-			<p>
-				<small>Hosted on GitHub Pages &mdash; repo at <a
-					href="https://github.com/sayi">sayi</a></small>
-			</p>
-		</footer>
 	</div>
 	<script src="javascripts/scale.fix.js"></script>
 	<script src="javascripts/jquery-1.8.0.min.js"></script>
 	<script type="text/javascript">
-		$(document).ready(function(){
-			$("header>p>a").click(function(){
-				$("section>div").hide();
-				$("." + $(this).attr("id")).show();
-			});
+		$(document).ready(function() {
+
 		});
 	</script>
 
