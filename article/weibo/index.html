@@ -194,10 +194,11 @@
 			var $close_contents = $(".close"),
 				$show_contents = $(".show-contents"),
 				$show_note = $(".show-note-link"),
+				$leftNav = $('#leftNav'),
 				$contents = $(".contents");
 			var UI = (function(){
 				var init = function(){
-					
+					$leftNav.scrollspy();
 					initEventsHandler();
 					
 				},
@@ -223,7 +224,6 @@
 				return {init:init};
 			})();
 			UI.init();
-			$('#leftNav').scrollspy()
 		});
 	</script>
 	
