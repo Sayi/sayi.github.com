@@ -286,6 +286,12 @@ article{
 	color: #2f2f2f;
 	
 }
+article h1{
+	font-size: 50px;
+	font-weight: 700;
+	line-height: 70px;
+	margin-bottom: 20px;
+}
 .right-corner-nav {
 	top: 0;
 	left: 0;
