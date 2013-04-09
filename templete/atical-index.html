@@ -5,148 +5,8 @@
 <link rel="stylesheet" href="../stylesheets/styles.css">
 <link rel="stylesheet" href="../stylesheets/font-awesome.min.css">
 <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
-<title>index</title>
+<title>aticle</title>
 <style type="text/css">
-body{
-font-family: 'Comic Sans MS';
-}
-.right-corner-nav {
-top: 0;
-left: 0;
-font-family: "Helvetica Neue",Helvetica,Arial,"Hiragino Sans GB",sans-serif;
-font-size: 14px;
-font-weight: normal;
-line-height: 26px;
-z-index: 1070;
-position: fixed;
-}
-.right-corner-nav>a {
-padding: 4px 15px;
--webkit-transition: all 0.35s linear;
--moz-transition: all 0.35s linear;
--o-transition: all 0.35s linear;
-transition: all 0.35s linear;
-color: #e58c7c;
-background-color: #fff;
-border-top: 0;
-border-bottom: 1px solid #d9d9d9;
-float: left;
-}
-.right-corner-nav>a:hover {
-color: #fff;
-background-color: #e58c7c;
-}
-.show-contents {
-position: fixed;
-top: 50%;
-margin-top: -50px;
-left: -30px;
-color: #fff;
-background-color: #edb1a7;
-width: 40px;
-text-align: right;
-padding: 20px 5px;
--webkit-transition: all 0.35s linear;
--moz-transition: all 0.35s linear;
--o-transition: all 0.35s linear;
-transition: all 0.35s linear;
--webkit-border-radius: 5px;
--moz-border-radius: 5px;
-border-radius: 5px;
-z-index: 1060;
-}
-.show-contents:hover {
-color: #fff;
-background-color: #e58c7c;
-left: -20px;
-}
-.leftpanel{
-width: 300px;
-text-align:center;
-position: fixed;
-top: 60px;
-left: -10px;
-bottom: 0;
-margin-left: 0;
-padding: 0;
-padding-bottom: 40px;
-overflow-y: auto;
-border: 1px solid #d9d9d9;
-background-color: #fff;
--webkit-border-radius: 10px;
--moz-border-radius: 10px;
-border-radius: 10px;
--webkit-box-shadow: 0 1px 6px rgba(0,0,0,0.25);
--moz-box-shadow: 0 1px 6px rgba(0,0,0,0.25);
-box-shadow: 0 1px 6px rgba(0,0,0,0.25);
--webkit-transition: left 0.5s ease;
--moz-transition: left 0.5s ease;
--o-transition: left 0.5s ease;
-transition: left 0.5s ease;
-z-index: 1060; 
-}
-.contents{
-width:700px;
-margin:0 auto;
-}
-ul.unstyled {
-padding: 0;
-margin-left: 0;
-list-style: none;
-}
-li {
-font-family: Georgia,"Times New Roman",Times,"Songti SC","SimSun",serif;
-position: relative;
-border-bottom: 1px dotted #d9d9d9;
-}
-
-li:hover {
-border-bottom: 1px dotted #a6a6a6;
-background-color: #eee;
--webkit-transition: all 0.35s linear;
--moz-transition: all 0.35s linear;
--o-transition: all 0.35s linear;
-transition: all 0.35s linear;
-}
-li.active {
-background-color: #e58c7c;
-}
-li a {
-padding: 10px 10px 8px 30px;
-display: block;
-}
-li.active a {
-color: #fff;
-}
-a {
-color: #555;
-text-decoration: none;
-}
-h1{
-font-family: inherit;
-font-weight: bold;
-line-height: 20px;
-color: inherit;
-text-rendering: optimizelegibility;
-margin: 20px 20px 20px 30px;
-}
-.close {
-padding: 10px 15px;
-font-size: 13px;
-float: none;
-text-align: right;
-color: #000;
-text-shadow: 0 1px 0 #fff;
-opacity: 0.2;
-filter: alpha(opacity=20);
-}
-.close:hover, .close:focus {
-color: #000;
-text-decoration: none;
-cursor: pointer;
-opacity: 0.4;
-filter: alpha(opacity=40);
-}
 </style>
 </head>
 <body>
@@ -159,7 +19,7 @@ filter: alpha(opacity=40);
       <i class="icon-chevron-right"></i>
 	</a>
 	
-	<div class="leftpanel">
+	<div class="leftpanel contents contents-active">
 		<div class="close"><i class="icon-remove"></i></div>
 		
 		<h1>Weibo</h1>
@@ -175,32 +35,40 @@ filter: alpha(opacity=40);
           <a href="">我是个loser，我要逆袭<i class="icon-chevron-right"></i></a>
           </li>
           <li class="show-note-link">
-          <a href="">我是个loser，我要逆袭<i class="icon-chevron-right"></i></a>
+          <a href="">最后一贴 命中注定我爱你<i class="icon-chevron-right"></i></a>
           </li>
       </ul>
 	</div>
-	<div class="contents">
+	<div class="posts">
 		<article>
 			<h2>青春</h2>
+			<pre><code>
+$ cd your_repo_root/repo_name
+$ git fetch origin
+$ git checkout gh-pages
+</code>
+			</pre>
 			<p>
 				为什么要有编码？
-首先大家需要明确的是在计算机里所有的数据都是字节的形式存储，处理的。我们需要这些字节来表示计算机里的信息。但是这些字节本身又是没有任何意义的，所以我们需要对这些字节赋予实际的意义。所以才会制定各种编码标准。
-
-编码模型
-首先需要明确的是存在两种编码模型
-
-简单字符集
-
-在这种编码模型里，一个字符集定义了这个字符集里包含什么字符，同时把每个字符如何对应成计算机里的比特也进行了定义。例如ASCII，在ASCII里直接定义了A -> 0100 0001。
-为什么要有编码？ 首先大家需要明确的是在计算机里所有的数据都是字节的形式存储，处理的。我们需要这些字节来表示计算机里的信息。但是这些字节本身又是没有任何意义的，所以我们需要对这些字节赋予实际的意义。所以才会制定各种编码标准。 编码模型 首先需要明确的是存在两种编码模型 简单字符集 在这种编码模型里，一个字符集定义了这个字符集里包含什么字符，同时把每个字符如何对应成计算机里的比特也进行了定义。例如ASCII，在ASCII里直接定义了A -> 0100 0001。
-为什么要有编码？ 首先大家需要明确的是在计算机里所有的数据都是字节的形式存储，处理的。我们需要这些字节来表示计算机里的信息。但是这些字节本身又是没有任何意义的，所以我们需要对这些字节赋予实际的意义。所以才会制定各种编码标准。 编码模型 首先需要明确的是存在两种编码模型 简单字符集 在这种编码模型里，一个字符集定义了这个字符集里包含什么字符，同时把每个字符如何对应成计算机里的比特也进行了定义。例如ASCII，在ASCII里直接定义了A -> 0100 0001。
-为什么要有编码？ 首先大家需要明确的是在计算机里所有的数据都是字节的形式存储，处理的。我们需要这些字节来表示计算机里的信息。但是这些字节本身又是没有任何意义的，所以我们需要对这些字节赋予实际的意义。所以才会制定各种编码标准。 编码模型 首先需要明确的是存在两种编码模型 简单字符集 在这种编码模型里，一个字符集定义了这个字符集里包含什么字符，同时把每个字符如何对应成计算机里的比特也进行了定义。例如ASCII，在ASCII里直接定义了A -> 0100 0001。
-为什么要有编码？ 首先大家需要明确的是在计算机里所有的数据都是字节的形式存储，处理的。我们需要这些字节来表示计算机里的信息。但是这些字节本身又是没有任何意义的，所以我们需要对这些字节赋予实际的意义。所以才会制定各种编码标准。 编码模型 首先需要明确的是存在两种编码模型 简单字符集 在这种编码模型里，一个字符集定义了这个字符集里包含什么字符，同时把每个字符如何对应成计算机里的比特也进行了定义。例如ASCII，在ASCII里直接定义了A -> 0100 0001。
-为什么要有编码？ 首先大家需要明确的是在计算机里所有的数据都是字节的形式存储，处理的。我们需要这些字节来表示计算机里的信息。但是这些字节本身又是没有任何意义的，所以我们需要对这些字节赋予实际的意义。所以才会制定各种编码标准。 编码模型 首先需要明确的是存在两种编码模型 简单字符集 在这种编码模型里，一个字符集定义了这个字符集里包含什么字符，同时把每个字符如何对应成计算机里的比特也进行了定义。例如ASCII，在ASCII里直接定义了A -> 0100 0001。
-为什么要有编码？ 首先大家需要明确的是在计算机里所有的数据都是字节的形式存储，处理的。我们需要这些字节来表示计算机里的信息。但是这些字节本身又是没有任何意义的，所以我们需要对这些字节赋予实际的意义。所以才会制定各种编码标准。 编码模型 首先需要明确的是存在两种编码模型 简单字符集 在这种编码模型里，一个字符集定义了这个字符集里包含什么字符，同时把每个字符如何对应成计算机里的比特也进行了定义。例如ASCII，在ASCII里直接定义了A -> 0100 0001。
-为什么要有编码？ 首先大家需要明确的是在计算机里所有的数据都是字节的形式存储，处理的。我们需要这些字节来表示计算机里的信息。但是这些字节本身又是没有任何意义的，所以我们需要对这些字节赋予实际的意义。所以才会制定各种编码标准。 编码模型 首先需要明确的是存在两种编码模型 简单字符集 在这种编码模型里，一个字符集定义了这个字符集里包含什么字符，同时把每个字符如何对应成计算机里的比特也进行了定义。例如ASCII，在ASCII里直接定义了A -> 0100 0001。
-为什么要有编码？ 首先大家需要明确的是在计算机里所有的数据都是字节的形式存储，处理的。我们需要这些字节来表示计算机里的信息。但是这些字节本身又是没有任何意义的，所以我们需要对这些字节赋予实际的意义。所以才会制定各种编码标准。 编码模型 首先需要明确的是存在两种编码模型 简单字符集 在这种编码模型里，一个字符集定义了这个字符集里包含什么字符，同时把每个字符如何对应成计算机里的比特也进行了定义。例如ASCII，在ASCII里直接定义了A -> 0100 0001。
-为什么要有编码？ 首先大家需要明确的是在计算机里所有的数据都是字节的形式存储，处理的。我们需要这些字节来表示计算机里的信息。但是这些字节本身又是没有任何意义的，所以我们需要对这些字节赋予实际的意义。所以才会制定各种编码标准。 编码模型 首先需要明确的是存在两种编码模型 简单字符集 在这种编码模型里，一个字符集定义了这个字符集里包含什么字符，同时把每个字符如何对应成计算机里的比特也进行了定义。例如ASCII，在ASCII里直接定义了A -> 0100 0001。
+				<pre><code>
+$ cd your_repo_root/repo_name
+$ git fetch origin
+$ git checkout gh-pages
+</code>
+			</pre>
+					首先大家需要明确的是在计算机里所有的数据都是字节的形式存储，处理的。我们需要这些字节来表示计算机里的信息。但是这些字节本身又是没有任何意义的，所以我们需要对这些字节赋予实际的意义。所以才会制定各种编码标准。
+					编码模型首先需要明确的是存在两种编码模型简单字符集在这种编码模型里，一个字符集定义了这个字符集里包含什么字符，同时把每个字符如何对应成计算机里的比特也进行了定义。例如ASCII，在ASCII里直接定义了A -> 0100 0001。
+					为什么要有编码？ 首先大家需要明确的是在计算机里所有的数据都是字节的形式存储，处理的。我们需要这些字节来表示计算机里的信息。但是这些字节本身又是没有任何意义的，所以我们需要对这些字节赋予实际的意义。所以才会制定各种编码标准。 编码模型 首先需要明确的是存在两种编码模型 简单字符集 在这种编码模型里，一个字符集定义了这个字符集里包含什么字符，同时把每个字符如何对应成计算机里的比特也进行了定义。例如ASCII，在ASCII里直接定义了A -> 0100 0001。
+					为什么要有编码？ 首先大家需要明确的是在计算机里所有的数据都是字节的形式存储，处理的。我们需要这些字节来表示计算机里的信息。但是这些字节本身又是没有任何意义的，所以我们需要对这些字节赋予实际的意义。所以才会制定各种编码标准。 编码模型 首先需要明确的是存在两种编码模型 简单字符集 在这种编码模型里，一个字符集定义了这个字符集里包含什么字符，同时把每个字符如何对应成计算机里的比特也进行了定义。例如ASCII，在ASCII里直接定义了A -> 0100 0001。
+					为什么要有编码？ 首先大家需要明确的是在计算机里所有的数据都是字节的形式存储，处理的。我们需要这些字节来表示计算机里的信息。但是这些字节本身又是没有任何意义的，所以我们需要对这些字节赋予实际的意义。所以才会制定各种编码标准。 编码模型 首先需要明确的是存在两种编码模型 简单字符集 在这种编码模型里，一个字符集定义了这个字符集里包含什么字符，同时把每个字符如何对应成计算机里的比特也进行了定义。例如ASCII，在ASCII里直接定义了A -> 0100 0001。
+					<blockquote>
+					为什么要有编码？ 首先大家需要明确的是在计算机里所有的数据都是字节的形式存储，处理的。我们需要这些字节来表示计算机里的信息。但是这些字节本身又是没有任何意义的，所以我们需要对这些字节赋予实际的意义。所以才会制定各种编码标准。 编码模型 首先需要明确的是存在两种编码模型 简单字符集 在这种编码模型里，一个字符集定义了这个字符集里包含什么字符，同时把每个字符如何对应成计算机里的比特也进行了定义。例如ASCII，在ASCII里直接定义了A -> 0100 0001。
+					</blockquote>
+					为什么要有编码？ 首先大家需要明确的是在计算机里所有的数据都是字节的形式存储，处理的。我们需要这些字节来表示计算机里的信息。但是这些字节本身又是没有任何意义的，所以我们需要对这些字节赋予实际的意义。所以才会制定各种编码标准。 编码模型 首先需要明确的是存在两种编码模型 简单字符集 在这种编码模型里，一个字符集定义了这个字符集里包含什么字符，同时把每个字符如何对应成计算机里的比特也进行了定义。例如ASCII，在ASCII里直接定义了A -> 0100 0001。
+					为什么要有编码？ 首先大家需要明确的是在计算机里所有的数据都是字节的形式存储，处理的。我们需要这些字节来表示计算机里的信息。但是这些字节本身又是没有任何意义的，所以我们需要对这些字节赋予实际的意义。所以才会制定各种编码标准。 编码模型 首先需要明确的是存在两种编码模型 简单字符集 在这种编码模型里，一个字符集定义了这个字符集里包含什么字符，同时把每个字符如何对应成计算机里的比特也进行了定义。例如ASCII，在ASCII里直接定义了A -> 0100 0001。
+					为什么要有编码？ 首先大家需要明确的是在计算机里所有的数据都是字节的形式存储，处理的。我们需要这些字节来表示计算机里的信息。但是这些字节本身又是没有任何意义的，所以我们需要对这些字节赋予实际的意义。所以才会制定各种编码标准。 编码模型 首先需要明确的是存在两种编码模型 简单字符集 在这种编码模型里，一个字符集定义了这个字符集里包含什么字符，同时把每个字符如何对应成计算机里的比特也进行了定义。例如ASCII，在ASCII里直接定义了A -> 0100 0001。
+					为什么要有编码？ 首先大家需要明确的是在计算机里所有的数据都是字节的形式存储，处理的。我们需要这些字节来表示计算机里的信息。但是这些字节本身又是没有任何意义的，所以我们需要对这些字节赋予实际的意义。所以才会制定各种编码标准。 编码模型 首先需要明确的是存在两种编码模型 简单字符集 在这种编码模型里，一个字符集定义了这个字符集里包含什么字符，同时把每个字符如何对应成计算机里的比特也进行了定义。例如ASCII，在ASCII里直接定义了A -> 0100 0001。
+					为什么要有编码？ 首先大家需要明确的是在计算机里所有的数据都是字节的形式存储，处理的。我们需要这些字节来表示计算机里的信息。但是这些字节本身又是没有任何意义的，所以我们需要对这些字节赋予实际的意义。所以才会制定各种编码标准。 编码模型 首先需要明确的是存在两种编码模型 简单字符集 在这种编码模型里，一个字符集定义了这个字符集里包含什么字符，同时把每个字符如何对应成计算机里的比特也进行了定义。例如ASCII，在ASCII里直接定义了A -> 0100 0001。
 			</p>
 		</article>
 	</div>
