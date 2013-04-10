@@ -341,6 +341,7 @@ Enter password: ********
 </code></pre>
 
 <p>2.除了GRANT，你可以直接用INSERT语句创建相同的账户，然后使用FLUSH PRIVILEGES告诉服务器重载授权表：
+	<pre><code>
     shell> mysql --user=root mysql
     mysql> INSERT INTO user
         ->     VALUES('localhost','monty',PASSWORD('some<em>pass'),
@@ -353,6 +354,7 @@ Enter password: ********
     mysql> INSERT INTO user (Host,User,Password)
         ->     VALUES('localhost','dummy','');
     mysql> FLUSH PRIVILEGES;
+    </code></pre>
 <strong>FLUSH PRIVILEGES的原因是告诉服务器重读授权表。否则，只有重启服务器后更改方会被注意到。使用 GRANT，则不需要使用FLUSH PRIVILEGES。</strong></p>
 
 <h4>从MySQL删除用户账户</h4>

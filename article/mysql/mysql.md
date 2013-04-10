@@ -249,6 +249,7 @@ INSERT这里字符串和日期值均为引号扩起来的字符串。另外，�
 	    ->     IDENTIFIED BY 'some_pass' WITH GRANT OPTION;
 
 2.除了GRANT，你可以直接用INSERT语句创建相同的账户，然后使用FLUSH PRIVILEGES告诉服务器重载授权表：
+
 	shell> mysql --user=root mysql
 	mysql> INSERT INTO user
 	    ->     VALUES('localhost','monty',PASSWORD('some_pass'),
