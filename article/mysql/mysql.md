@@ -246,7 +246,12 @@ INSERT这里字符串和日期值均为引号扩起来的字符串。另外，�
 1.首先，使用MySQL程序以MySQL root用户来连接服务器,然后设置帐号和授权：
 
 	mysql> GRANT ALL PRIVILEGES ON *.* TO 'monty'@'%'
-	    ->     IDENTIFIED BY 'some_pass' WITH GRANT OPTION;
+	    ->     IDENTIFIED BY 'some_pass' [WITH with_option];
+	with_option:
+	| MAX_QUERIES_PER_HOUR count
+	| MAX_UPDATES_PER_HOUR count
+	| MAX_CONNECTIONS_PER_HOUR count
+	| MAX_USER_CONNECTIONS count
 
 2.除了GRANT，你可以直接用INSERT语句创建相同的账户，然后使用FLUSH PRIVILEGES告诉服务器重载授权表：
 
