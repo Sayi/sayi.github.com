@@ -240,6 +240,7 @@ INSERT这里字符串和日期值均为引号扩起来的字符串。另外，�
 	shell> mysql --user=monty --password=guess db_name
 #### 向MySQL增加新用户账户
 可以用两种方式创建MySQL账户：
+
 * 使用GRANT语句
 * 直接操作MySQL授权表
 
