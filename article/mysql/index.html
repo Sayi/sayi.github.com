@@ -28,6 +28,9 @@
           <li class="show-note-link">
           <a href="#basic">Mysql Basic<i class="icon-chevron-right"></i></a>
           </li>
+          <li class="show-note-link">
+          <a href="#sql">SQL、Data Types<i class="icon-chevron-right"></i></a>
+          </li>
           
       </ul>
     </div>
@@ -394,6 +397,130 @@ with_option:
 <pre><code>mysql&gt; GRANT USAGE ON *.* TO 'jeffrey'@'%' IDENTIFIED BY 'biscuit';
 </code></pre>
       </article>
+      <article id="sql"><h1>Mysql中的SQL</h1>
+<h2>SQL(Structrured Query Language)</h2>
+<p>用于读写Mysql数据库。SQL是与MYSQL交互所需的最基本的工具。</p>
+<h4>SQL的历史</h4>
+<p>当Mysql出现时，它为数据库服务器业务带来了新的方法。Monty并没有开发另一个庞大的RDBMS，也没有尝试去提供比数据库巨头们更多的特性。而是为最常用的SQL刚能创建了一个小巧而快速的实现。</p>
+<h4>SQL的设计</h4>
+<p>SQL是一种"自然"语言，因为它具有简单而明确的命令结构。每个称为“查询”的SQL命令都可以被分割为语言元素。<strong>SQL语句不区分大小写</strong></p>
+<blockquote>
+<p>select   | name   |  from people  |  where name like '%e'<br>
+动词   | 直接宾语  |   间接宾语    |    形容词短语  
+</p>
+</blockquote>
+<h4>表管理</h4>
+<h5>Create table</h5>
+<pre><code>create table table_name(
+    column_name1 type [modifiers]
+    [, column_name2 type [modifiers]]
+)
+
+create table user(
+    user_id bigint unsigned not NULL primary key,
+    user_name char(10) not NULL,
+    last_name varchar(30),
+    office char(2) not NULL default 'NY'
+);
+</code></pre>
+
+<blockquote>
+<p>NOTNULL修饰符表示该列不能包含任何null值，如果试图将null值赋给该列，那么sql 将产生错误，
+此规则有两个例外<br>
+1.如果该列被定义为auto_increment,则null值会导致一个自动产生的值<br>
+2.如果该列指定了默认值，则null值会被赋予默认值  
+</p>
+</blockquote>
+<h4>DROP table</h4>
+<p><strong>始终备份并谨慎的删除表</strong>  
+</p>
+<pre><code>drop table [if exists] table_name1,table_name2;
+</code></pre>
+
+<p>if exists在设计用于创建数据库及其所有表的庞大脚本时非常有用。</p>
+<h4>INSERT</h4>
+<p>当向数值字段插入数据时，可以原样插入，对于其他字段，必须把值放在单引号中。<br>
+<strong>转义字符（默认为/）允许将单引号和其他转义字符直接量进行转义</strong>  
+</p>
+<h4>UPDATE</h4>
+<pre><code>update table_name set column1=value1 [where clause]  
+</code></pre>
+
+<p><strong>WHERE 子句中的列是要搜索的列，所以一般要围绕经常使用的列的组合来创建索引。</strong>  
+</p>
+<h4>DELETE</h4>
+<pre><code>delete from table_name [where clause]
+</code></pre>
+
+<h4>SELECT</h4>
+<pre><code>select 1;
+select database();
+select current_date();
+select * from people limit 10;
+</code></pre>
+
+<h2>Mysql DataType</h2>
+<p>MySQL supports a number of SQL data types in several categories:  
+</p>
+<blockquote>
+<p>numeric types<br>
+date and time types<br>
+string (character and byte) types.</p>
+</blockquote>
+<h4>Numeric Type Overview</h4>
+<ul>
+<li>Integer Types (Exact Value) - INTEGER, INT, SMALLINT, TINYINT, MEDIUMINT, BIGINT</li>
+<li>Fixed-Point Types (Exact Value) - DECIMAL, NUMERIC</li>
+<li>Floating-Point Types (Approximate Value) - FLOAT, DOUBLE</li>
+<li>Bit-Value Type - BIT</li>
+</ul>
+<h4>Date and Time Types</h4>
+<ul>
+<li>The DATE, DATETIME, and TIMESTAMP Types</li>
+<li>The TIME Type</li>
+<li>The YEAR Type</li>
+</ul>
+<h4>String Types</h4>
+<ul>
+<li>The CHAR and VARCHAR Types</li>
+<li>The BINARY and VARBINARY Types</li>
+<li>The BLOB and TEXT Types</li>
+<li>The ENUM Type</li>
+<li>The SET Type</li>
+</ul>
+<h2>索引</h2>
+<p>索引有助于数据库以一种可进行更迅速查找的方式存储数据，遗憾的是，尽管可以更为快速地进行搜索，但在得到这一好处的同时。却要牺牲磁盘空间和修改速度。索引最有效的使用方法是要为那些要频繁查找的列创建索引。</p>
+<pre><code>create index index_name on table_name(column1,column2...)
+</code></pre>
+
+<p>Mysql也可以在创建表的同时创建索引</p>
+<pre><code>create table material(
+id int not null,
+name char(50) not null,
+resistance int,
+index index1(id,name),
+unique index index2(name)
+)
+</code></pre>
+
+<p>上面的例子为表创建了两个索引，第一个索引名为index1，由id和那么两个字段组成。第一个索引只包括name字段，指明那么字段必须是惟一的。<strong>一般，应该将所有惟一索引的字段声明为not null</strong>  
+</p>
+<h2>序列</h2>
+<p>最好的一种主键是除了作为主键以外在数据库中没有任何意义。更好的设计原则是使用无意义的数字作为主键。  
+</p>
+<h4>auto_increment</h4>
+<p><strong>在mysql中创建表时，最多可以指定一列作为auto_increment，即最多可用于表中一个整数类型的列。</strong>  
+</p>
+<blockquote>
+<p>该列必须是主键或者惟一索引中仅有的列  
+</p>
+</blockquote>
+<p>这时在插入行时，若指定该行的相应值为null或0，就可以为该列自动完成插入，并置为当前的最高值加1。  
+</p>
+<h4>LAST<em>INSERT</em>ID()函数</h4>
+<p>可以通过引用此函数的返回值并自己完成增加来实现序列。  
+</p>
+<pre><code>update table_name set id = last_insert_id(id+1);</code></pre></article>
     </div>
     <script src="../../javascripts/scale.fix.js"></script>
     <script src="../../javascripts/jquery-1.8.0.min.js"></script>
