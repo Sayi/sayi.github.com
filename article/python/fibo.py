@@ -4,4 +4,5 @@ def fib(n) :
         print(b, end=' ')
         a, b = b, a+b
     print()
-#print("do it")
+if __name__ == '__main__' :
+    print("fib's main execute")
