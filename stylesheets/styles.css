@@ -464,3 +464,28 @@ ul.unstyled {
 	opacity: 0.4;
 	filter: alpha(opacity = 40);
 }
+
+.choice-nav{
+  display: block;
+  list-style: none;
+}
+
+.choice-nav li {
+display: block;
+float: left;
+}
+.choice-nav li {
+width: 14px;
+height: 14px;
+background: #b5b5b5;
+-webkit-border-radius: 50%;
+-moz-border-radius: 50%;
+border-radius: 50%;
+margin: 0 4px;
+overflow: hidden;
+cursor: pointer;
+display: inline-block;
+}
+.choice-nav li.selected {
+background-color: #39c;
+}
