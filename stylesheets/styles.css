@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Lato:300italic,700italic,300,700);
+/*@import url(https://fonts.googleapis.com/css?family=Lato:300italic,700italic,300,700);*/
 
 body {
   padding:50px;
@@ -123,7 +123,6 @@ img {
 header {
   width:270px;
   float:left;
-  position:fixed;
 }
 
 header ul {
@@ -186,7 +185,7 @@ header ul a strong {
 
 section {
   width:500px;
-  float:right;
+  float:left;
   padding-bottom:50px;
 }
 
