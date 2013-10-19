@@ -124,11 +124,13 @@ float: right;
 			});
 
 			$(".choice-nav li").click(function(){
-				$(".choice-nav li.selected").removeClass('selected');
-				$(this).addClass('selected');
-				
-				$(".choice").hide();
-				$("#" + $(this).data('show')).fadeIn();
+				if (!$(this).hasClass('selected')){
+					$(".choice-nav li.selected").removeClass('selected');
+					$(this).addClass('selected');
+					
+					$(".choice").hide();
+					$("#" + $(this).data('show')).fadeIn();
+				}
 				
 			});
 		});
