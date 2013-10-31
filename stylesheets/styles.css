@@ -184,8 +184,6 @@ header ul a strong {
 }
 
 section {
-  width:500px;
-  float:left;
   padding-bottom:50px;
 }
 
@@ -488,4 +486,13 @@ display: inline-block;
 }
 .choice-nav li.selected {
 background-color: #39c;
+}
+.python{
+  background-color: #2b5b84;
+}
+.python h3{
+  color:#39c;
+}
+section>ul>li:nth-child(odd):not(.python){
+  background-color: #ddd;
 }
