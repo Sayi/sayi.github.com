@@ -56,3 +56,8 @@ margin: 15px 0;
 ::selection {
 background-color: #2C9E7A;
 }
+
+.bookmark{
+border-left: 4px solid #39c;
+padding-left: 40px !important;
+}
