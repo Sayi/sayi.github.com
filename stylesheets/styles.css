@@ -493,6 +493,6 @@ background-color: #39c;
 .python h3{
   color:#39c;
 }
-section>ul>li:nth-child(odd):not(.python){
+/* section>ul>li:nth-child(odd):not(.python){
   background-color: #ddd;
-}
+} */
