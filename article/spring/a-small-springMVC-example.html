@@ -1,0 +1,229 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>html { font-size: 100%; overflow-y: scroll; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+
+body{
+  color:#444;
+  font-family:Georgia, Palatino, 'Palatino Linotype', Times, 'Times New Roman',
+              "Hiragino Sans GB", "STXihei", "微软雅黑", serif;
+  font-size:12px;
+  line-height:1.5em;
+  background:#fefefe;
+  width: 45em;
+  margin: 10px auto;
+  padding: 1em;
+  outline: 1300px solid #FAFAFA;
+}
+
+a{ color: #0645ad; text-decoration:none;}
+a:visited{ color: #0b0080; }
+a:hover{ color: #06e; }
+a:active{ color:#faa700; }
+a:focus{ outline: thin dotted; }
+a:hover, a:active{ outline: 0; }
+
+span.backtick {
+  border:1px solid #EAEAEA;
+  border-radius:3px;
+  background:#F8F8F8;
+  padding:0 3px 0 3px;
+}
+
+::-moz-selection{background:rgba(255,255,0,0.3);color:#000}
+::selection{background:rgba(255,255,0,0.3);color:#000}
+
+a::-moz-selection{background:rgba(255,255,0,0.3);color:#0645ad}
+a::selection{background:rgba(255,255,0,0.3);color:#0645ad}
+
+p{
+margin:1em 0;
+}
+
+img{
+max-width:100%;
+}
+
+h1,h2,h3,h4,h5,h6{
+font-weight:normal;
+color:#111;
+line-height:1em;
+}
+h4,h5,h6{ font-weight: bold; }
+h1{ font-size:2.5em; }
+h2{ font-size:2em; border-bottom:1px solid silver; padding-bottom: 5px; }
+h3{ font-size:1.5em; }
+h4{ font-size:1.2em; }
+h5{ font-size:1em; }
+h6{ font-size:0.9em; }
+
+blockquote{
+color:#666666;
+margin:0;
+padding-left: 3em;
+border-left: 0.5em #EEE solid;
+}
+hr { display: block; height: 2px; border: 0; border-top: 1px solid #aaa;border-bottom: 1px solid #eee; margin: 1em 0; padding: 0; }
+
+
+pre , code, kbd, samp { 
+  color: #000; 
+  font-family: monospace; 
+  font-size: 0.88em; 
+  border-radius:3px;
+  background-color: #F8F8F8;
+  border: 1px solid #CCC; 
+}
+pre { white-space: pre; white-space: pre-wrap; word-wrap: break-word; padding: 5px 12px;}
+pre code { border: 0px !important; padding: 0;}
+code { padding: 0 3px 0 3px; }
+
+b, strong { font-weight: bold; }
+
+dfn { font-style: italic; }
+
+ins { background: #ff9; color: #000; text-decoration: none; }
+
+mark { background: #ff0; color: #000; font-style: italic; font-weight: bold; }
+
+sub, sup { font-size: 75%; line-height: 0; position: relative; vertical-align: baseline; }
+sup { top: -0.5em; }
+sub { bottom: -0.25em; }
+
+ul, ol { margin: 1em 0; padding: 0 0 0 2em; }
+li p:last-child { margin:0 }
+dd { margin: 0 0 0 2em; }
+
+img { border: 0; -ms-interpolation-mode: bicubic; vertical-align: middle; }
+
+table { border-collapse: collapse; border-spacing: 0; }
+td { vertical-align: top; }
+
+@media only screen and (min-width: 480px) {
+body{font-size:14px;}
+}
+
+@media only screen and (min-width: 768px) {
+body{font-size:16px;}
+}
+
+@media print {
+  * { background: transparent !important; color: black !important; filter:none !important; -ms-filter: none !important; }
+  body{font-size:12pt; max-width:100%; outline:none;}
+  a, a:visited { text-decoration: underline; }
+  hr { height: 1px; border:0; border-bottom:1px solid black; }
+  a[href]:after { content: " (" attr(href) ")"; }
+  abbr[title]:after { content: " (" attr(title) ")"; }
+  .ir a:after, a[href^="javascript:"]:after, a[href^="#"]:after { content: ""; }
+  pre, blockquote { border: 1px solid #999; padding-right: 1em; page-break-inside: avoid; }
+  tr, img { page-break-inside: avoid; }
+  img { max-width: 100% !important; }
+  @page :left { margin: 15mm 20mm 15mm 10mm; }
+  @page :right { margin: 15mm 10mm 15mm 20mm; }
+  p, h2, h3 { orphans: 3; widows: 3; }
+  h2, h3 { page-break-after: avoid; }
+}
+</style><title>a-small-springMVC-example</title></head><body><h2>
+<a name="spring-mvc-3-%E5%85%A5%E9%97%A8%E7%A4%BA%E4%BE%8B" class="anchor" href="#spring-mvc-3-%E5%85%A5%E9%97%A8%E7%A4%BA%E4%BE%8B"><span class="octicon octicon-link"></span></a>Spring MVC 3 入门示例</h2>
+
+<blockquote>
+<p>目标：输入一个url地址，显示页面，页面内容从后台获取。
+<a href="result.png" target="_blank"><img src="result.png" alt="" style="max-width:100%;"></a></p>
+</blockquote>
+
+<ol>
+<li><p>准备：目录结构，依赖架包<br>
+首先创建基本的动态web工程的目录，如同下面的结构：<br><a href="web-dir.png" target="_blank"><img src="web-dir.png" alt="" style="max-width:100%;"></a><br>
+在下载的spring-framword版本的dist目录下，有发布的各种用途的jar包，需要什么架包就使用什么架包。在这个入门级的程序中，我们没有使用到数据库，所以不需要org.springframework.jdbc.RELEASE.jar架包，由于依赖于common-log，所以需要commons-logging.jar。本示例所需架包如下图：<br><a href="lib.png" target="_blank"><img src="lib.png" alt="" style="max-width:100%;"></a></p></li>
+<li>
+<p>web.xml配置：DispatcherServlet<br>
+Spring MVC围绕着DispatcherServlet这个核心进行设计的，包括处理请求、URL映射、视图解析、本地化和主题解析等。
+如下配置了一个名称为spring3-example的Servlet，其中url-pattern有多种设计方式，请参见 <em>Web 记：如何设计URL</em> ：  </p>
+
+<pre><code>&lt;servlet&gt;
+    &lt;servlet-name&gt;spring3-example&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
+    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+&lt;/servlet&gt;
+&lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;spring3-example&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
+</code></pre>
+</li>
+<li>
+<p>创建Spring bean配置文件<br>
+一旦初始化了DispatcherServlet，Spring MVC就会在web应用程序的WEB-INF目录下寻找spring bean的配置文件[servlet-name]-servlet.xml，这里的名称是spring3-example-servlet.xml，那么接下来就是在WEB-INF下创建该文件。  </p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+xmlns:context="http://www.springframework.org/schema/context"
+xsi:schemaLocation="
+http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-3.0.xsd"&gt;
+
+&lt;context:component-scan base-package="org.sayi" /&gt;
+&lt;bean
+    class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" /&gt;
+&lt;bean
+    class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter" /&gt;
+
+&lt;bean id="viewResolver"
+    class="org.springframework.web.servlet.view.InternalResourceViewResolver"&gt;
+    &lt;property name="viewClass"
+    value="org.springframework.web.servlet.view.JstlView" /&gt;
+    &lt;property name="prefix" value="/WEB-INF/example/" /&gt;
+    &lt;property name="suffix" value=".jsp" /&gt;
+&lt;/bean&gt;
+&lt;/beans&gt;
+</code></pre>
+
+<p>上面代码中是基于注解的自动扫描配置，这样就会自动扫描@Controller、@Reposity、@Service组件等  </p>
+
+<pre><code>&lt;context:component-scan base-package="org.sayi" /&gt;  
+</code></pre>
+
+<p>配置文件中还提供了三个特别的bean，这些bean在spring中有特别的作用。比如viewResolver配置视图文件存放在WEB-INF/example目录下，RequestMappingHandlerMapping映射请求给处理器，会自动查询@Controller中的@RequestMapping注解，在3.1以前的版本中使用DefaultAnnotationHandlerMapping。默认的配置在包org.springframework.web.servlet下的DispatcherServlet.properties文件中。  </p>
+</li>
+<li>
+<p>创建控制器org.sayi.controller.HelloController<br>
+使用注解@Controller标识控制器，@RequestMapping标识映射关系，如果方法返回值为void，则默认返回以方法名命名的视图，如下，则会返回show.jsp页面。</p>
+
+<pre><code>package org.sayi.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class HelloController {
+
+    @RequestMapping("show")
+    public void show(Model model){
+        model.addAttribute("msg", "hello,spring3 mvc example by Sayi");
+    }
+
+}
+</code></pre>
+</li>
+<li>
+<p>创建页面  WEB-INF/example/show.jsp</p>
+
+<pre><code>&lt;%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta charset="UTF-8"&gt;
+&lt;title&gt;spring2 mvc example&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    ${msg}
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+</li>
+<li><p>测试结果<br>
+至此，完整的目录结构如下：<br><a href="end-result.png" target="_blank"><img src="end-result.png" alt="" style="max-width:100%;"></a><br>
+访问：http://localhost:port/spring3-mvc-example/show  </p></li>
+</ol></body></html>
