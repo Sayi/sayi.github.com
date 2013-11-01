@@ -128,6 +128,7 @@ Task有如下的结构：
 scp 任务：  
 依赖jsch.jar包
 
+<!--?prettify lang=xml?-->
     <property name="address" value="172.16.5.23:/opt/tomcat/webapps/project/WEB-INF/lib/" />
     <property name="user" value="root" />
     <property name="password" value="password" />
@@ -147,6 +148,7 @@ jython.jar：Python with script task
 
 ####　示例
 
+<!--?prettify lang=xml?-->
     <?xml version="1.0" encoding="UTF-8"?>
     <!-- ======================================================================   
          author   Sayi                                                                

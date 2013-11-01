@@ -28,6 +28,7 @@
 Spring MVC围绕着DispatcherServlet这个核心进行设计的，包括处理请求、URL映射、视图解析、本地化和主题解析等。
 如下配置了一个名称为spring3-example的Servlet，其中url-pattern有多种设计方式，请参见 *Web 记：如何设计URL* ：  
 
+<!--?prettify lang=xml?-->
         <servlet>
             <servlet-name>spring3-example</servlet-name>
             <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -42,6 +43,7 @@ Spring MVC围绕着DispatcherServlet这个核心进行设计的，包括处理�
 3. 创建Spring bean配置文件  
 一旦初始化了DispatcherServlet，Spring MVC就会在web应用程序的WEB-INF目录下寻找spring bean的配置文件[servlet-name]-servlet.xml，这里的名称是spring3-example-servlet.xml，那么接下来就是在WEB-INF下创建该文件。  
 
+<!--?prettify lang=xml?-->
         <?xml version="1.0" encoding="UTF-8"?>
         <beans xmlns="http://www.springframework.org/schema/beans"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
@@ -74,6 +76,7 @@ Spring MVC围绕着DispatcherServlet这个核心进行设计的，包括处理�
 4. 创建控制器org.sayi.controller.HelloController  
 使用注解@Controller标识控制器，@RequestMapping标识映射关系，如果方法返回值为void，则默认返回以方法名命名的视图，如下，则会返回show.jsp页面。
 
+<!--?prettify lang=java?-->
         package org.sayi.controller;
 
         import org.springframework.stereotype.Controller;
@@ -92,6 +95,7 @@ Spring MVC围绕着DispatcherServlet这个核心进行设计的，包括处理�
 
 5. 创建页面  WEB-INF/example/show.jsp
 
+<!--?prettify lang=jsp?-->
         <%@ page language="java" contentType="text/html; charset=UTF-8"
             pageEncoding="UTF-8"%>
         <!DOCTYPE html>

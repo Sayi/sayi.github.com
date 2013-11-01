@@ -7,9 +7,11 @@
     content="width=device-width, initial-scale=1, user-scalable=no">
 <link rel="stylesheet" href="../../stylesheets/styles.css">
 <link rel="stylesheet" href="../../stylesheets/page.css">
+<link href="../../javascripts/google-code-prettify/prettify.css" type="text/css" rel="stylesheet" />
+<script src="../../javascripts/google-code-prettify/prettify.js"></script>
 <title>Ant 使用</title>
 </head>
-<body>
+<body onload="prettyPrint()">
 <article>
 <h1>
 <a name="apache-ant" class="anchor" href="#apache-ant"><span class="octicon octicon-link"></span></a>Apache Ant</h1>
@@ -22,6 +24,7 @@
 
 <p>Ant构建脚本是由一系列Target组成的，其中Target可以依赖其它的Target。每个Target是由若干Task组成。总体结构可以写成这样：</p>
 
+<!--?prettify lang=xml?-->
 <pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;!-- ====================================================================== 
     注释                                                             
@@ -70,6 +73,7 @@
 
 <p>一些内建的任务：  </p>
 
+<!--?prettify lang=xml?-->
 <pre><code>copy 复制
 &lt;copy todir="../dest/dir"&gt;
 &lt;fileset dir="src_dir"&gt;
@@ -166,6 +170,7 @@ ant.library.dir     the directory that has been used to load Ant's
 </ol><p>scp 任务：<br>
 依赖jsch.jar包</p>
 
+<!--?prettify lang=xml?-->
 <pre><code>&lt;property name="address" value="172.16.5.23:/opt/tomcat/webapps/project/WEB-INF/lib/" /&gt;
 &lt;property name="user" value="root" /&gt;
 &lt;property name="password" value="password" /&gt;
@@ -186,6 +191,7 @@ jython.jar：Python with script task  </p>
 <h4>
 <a name="%E7%A4%BA%E4%BE%8B" class="anchor" href="#%E7%A4%BA%E4%BE%8B"><span class="octicon octicon-link"></span></a>　示例</h4>
 
+<!--?prettify lang=xml?-->
 <pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;!-- ======================================================================   
      author   Sayi                                                                

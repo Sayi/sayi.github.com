@@ -7,31 +7,28 @@
     content="width=device-width, initial-scale=1, user-scalable=no">
 <link rel="stylesheet" href="../../stylesheets/styles.css">
 <link rel="stylesheet" href="../../stylesheets/page.css">
+<link href="../../javascripts/google-code-prettify/prettify.css" type="text/css" rel="stylesheet" />
+<script src="../../javascripts/google-code-prettify/prettify.js"></script>
 <title>Spring MVC 3 入门示例</title>
 </head>
-<body><article><h1>
-<a name="spring-mvc-3-%E5%85%A5%E9%97%A8%E7%A4%BA%E4%BE%8B" class="anchor" href="#spring-mvc-3-%E5%85%A5%E9%97%A8%E7%A4%BA%E4%BE%8B"><span class="octicon octicon-link"></span></a>Spring MVC 3 入门示例</h1>
-
+<body onload="prettyPrint()"><article>
+<h1 id="spring-mvc-3">Spring MVC 3 入门示例</h1>
 <blockquote>
 <p>要做什么：输入一个url地址，显示页面，页面内容从后台获取。  </p>
 </blockquote>
-
 <ol>
 <li>
-<p>准备：目录结构，依赖架包<br>
+<p>准备：目录结构，依赖架包<br />
 首先创建基本的动态web工程的目录，如同下面的结构：  </p>
-
 <pre><code>---- spring3-mvc-example\  
             | -- src\  
             | -- webapps\  
                     | -- META-INF\  
                     | -- WEB-INF\  
                             | -- lib\  
-                            | -- web.xml  
+                            | -- web.xml
 </code></pre>
-
 <p>在下载的spring-framword版本的dist目录下，有发布的各种用途的jar包，需要什么架包就使用什么架包。在这个入门级的程序中，我们没有使用到数据库，所以不需要org.springframework.jdbc.RELEASE.jar架包，由于依赖于common-log，所以需要commons-logging.jar。本示例所需架包如下图：   </p>
-
 <pre><code>------lib\
        | -- commons-logging-1.1.1.jar
        | -- jstl-1.1.2.jar
@@ -41,104 +38,110 @@
        | -- org.springframework.core-3.1.3.RELEASE.jar
        | -- org.springframework.expression-3.1.3.RELEASE.jar
        | -- org.springframework.web-3.1.3.RELEASE.jar
-       | -- org.springframework.web.servlet-3.1.3.RELEASE.jar  
+       | -- org.springframework.web.servlet-3.1.3.RELEASE.jar
 </code></pre>
 </li>
 <li>
-<p>web.xml配置：DispatcherServlet<br>
+<p>web.xml配置：DispatcherServlet<br />
 Spring MVC围绕着DispatcherServlet这个核心进行设计的，包括处理请求、URL映射、视图解析、本地化和主题解析等。
 如下配置了一个名称为spring3-example的Servlet，其中url-pattern有多种设计方式，请参见 <em>Web 记：如何设计URL</em> ：  </p>
-
-<pre><code>&lt;servlet&gt;
-    &lt;servlet-name&gt;spring3-example&lt;/servlet-name&gt;
-    &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
-    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
-&lt;/servlet&gt;
-&lt;servlet-mapping&gt;
-    &lt;servlet-name&gt;spring3-example&lt;/servlet-name&gt;
-    &lt;url-pattern&gt;/&lt;/url-pattern&gt;
-&lt;/servlet-mapping&gt;
-</code></pre>
 </li>
-<li>
-<p>创建Spring bean配置文件<br>
-一旦初始化了DispatcherServlet，Spring MVC就会在web应用程序的WEB-INF目录下寻找spring bean的配置文件[servlet-name]-servlet.xml，这里的名称是spring3-example-servlet.xml，那么接下来就是在WEB-INF下创建该文件。  </p>
-
-<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;beans xmlns="http://www.springframework.org/schema/beans"
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
-xmlns:context="http://www.springframework.org/schema/context"
-xsi:schemaLocation="
-http://www.springframework.org/schema/beans
-http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-http://www.springframework.org/schema/context
-http://www.springframework.org/schema/context/spring-context-3.0.xsd"&gt;
-
-&lt;context:component-scan base-package="org.sayi" /&gt;
-&lt;bean
-    class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" /&gt;
-&lt;bean
-    class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter" /&gt;
-
-&lt;bean id="viewResolver"
-    class="org.springframework.web.servlet.view.InternalResourceViewResolver"&gt;
-    &lt;property name="viewClass"
-    value="org.springframework.web.servlet.view.JstlView" /&gt;
-    &lt;property name="prefix" value="/WEB-INF/example/" /&gt;
-    &lt;property name="suffix" value=".jsp" /&gt;
-&lt;/bean&gt;
-&lt;/beans&gt;
-</code></pre>
-
-<p>上面代码中是基于注解的自动扫描配置，这样就会自动扫描@Controller、@Reposity、@Service组件等  </p>
-
-<pre><code>&lt;context:component-scan base-package="org.sayi" /&gt;  
-</code></pre>
-
-<p>配置文件中还提供了三个特别的bean，这些bean在spring中有特别的作用。比如viewResolver配置视图文件存放在WEB-INF/example目录下，RequestMappingHandlerMapping映射请求给处理器，会自动查询@Controller中的@RequestMapping注解，在3.1以前的版本中使用DefaultAnnotationHandlerMapping。默认的配置在包org.springframework.web.servlet下的DispatcherServlet.properties文件中。  </p>
-</li>
-<li>
-<p>创建控制器org.sayi.controller.HelloController<br>
-使用注解@Controller标识控制器，@RequestMapping标识映射关系，如果方法返回值为void，则默认返回以方法名命名的视图，如下，则会返回show.jsp页面。</p>
-
-<pre><code>package org.sayi.controller;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-@Controller
-public class HelloController {
-
-    @RequestMapping("show")
-    public void show(Model model){
-        model.addAttribute("msg", "hello,spring3 mvc example by Sayi");
-    }
-
-}
-</code></pre>
-</li>
-<li>
-<p>创建页面  WEB-INF/example/show.jsp</p>
-
-<pre><code>&lt;%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%&gt;
-&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-&lt;head&gt;
-&lt;meta charset="UTF-8"&gt;
-&lt;title&gt;spring2 mvc example&lt;/title&gt;
-&lt;/head&gt;
-&lt;body&gt;
-    ${msg}
-&lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-</li>
-<li><p>测试结果<br>
-至此，完整的目录结构如下：<br><a href="end-result.png" target="_blank"><img src="end-result.png" alt="" style="max-width:100%;"></a><br>
-访问：http://localhost:port/spring3-mvc-example/show<br><a href="result.png" target="_blank"><img src="result.png" alt="" style="max-width:100%;"></a></p></li>
 </ol>
+<!--?prettify lang=xml?-->
+
+<pre><code>    &lt;servlet&gt;
+        &lt;servlet-name&gt;spring3-example&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
+        &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+    &lt;/servlet&gt;
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;spring3-example&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+</code></pre>
+<ol>
+<li>创建Spring bean配置文件<br />
+一旦初始化了DispatcherServlet，Spring MVC就会在web应用程序的WEB-INF目录下寻找spring bean的配置文件[servlet-name]-servlet.xml，这里的名称是spring3-example-servlet.xml，那么接下来就是在WEB-INF下创建该文件。  </li>
+</ol>
+<!--?prettify lang=xml?-->
+
+<pre><code>    &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+    &lt;beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd"&gt;
+
+    &lt;context:component-scan base-package="org.sayi" /&gt;
+    &lt;bean
+        class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" /&gt;
+    &lt;bean
+        class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter" /&gt;
+
+    &lt;bean id="viewResolver"
+        class="org.springframework.web.servlet.view.InternalResourceViewResolver"&gt;
+        &lt;property name="viewClass"
+        value="org.springframework.web.servlet.view.JstlView" /&gt;
+        &lt;property name="prefix" value="/WEB-INF/example/" /&gt;
+        &lt;property name="suffix" value=".jsp" /&gt;
+    &lt;/bean&gt;
+    &lt;/beans&gt;
+</code></pre>
+<p>上面代码中是基于注解的自动扫描配置，这样就会自动扫描@Controller、@Reposity、@Service组件等  </p>
+<pre><code>    &lt;context:component-scan base-package="org.sayi" /&gt;
+</code></pre>
+<p>配置文件中还提供了三个特别的bean，这些bean在spring中有特别的作用。比如viewResolver配置视图文件存放在WEB-INF/example目录下，RequestMappingHandlerMapping映射请求给处理器，会自动查询@Controller中的@RequestMapping注解，在3.1以前的版本中使用DefaultAnnotationHandlerMapping。默认的配置在包org.springframework.web.servlet下的DispatcherServlet.properties文件中。  </p>
+<ol>
+<li>创建控制器org.sayi.controller.HelloController<br />
+使用注解@Controller标识控制器，@RequestMapping标识映射关系，如果方法返回值为void，则默认返回以方法名命名的视图，如下，则会返回show.jsp页面。</li>
+</ol>
+<!--?prettify lang=java?-->
+
+<pre><code>    package org.sayi.controller;
+
+    import org.springframework.stereotype.Controller;
+    import org.springframework.ui.Model;
+    import org.springframework.web.bind.annotation.RequestMapping;
+
+    @Controller
+    public class HelloController {
+
+        @RequestMapping("show")
+        public void show(Model model){
+            model.addAttribute("msg", "hello,spring3 mvc example by Sayi");
+        }
+
+    }
+</code></pre>
+<ol>
+<li>创建页面  WEB-INF/example/show.jsp</li>
+</ol>
+<!--?prettify lang=jsp?-->
+
+<pre><code>    &lt;%@ page language="java" contentType="text/html; charset=UTF-8"
+        pageEncoding="UTF-8"%&gt;
+    &lt;!DOCTYPE html&gt;
+    &lt;html&gt;
+    &lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;spring2 mvc example&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        ${msg}
+    &lt;/body&gt;
+    &lt;/html&gt;
+</code></pre>
+<ol>
+<li>测试结果<br />
+至此，完整的目录结构如下：<br />
+<img alt="" src="end-result.png" /><br />
+访问：http://localhost:port/spring3-mvc-example/show<br />
+<img alt="" src="result.png" /></li>
+</ol>
+
 </ARTICLE>
 </body>
 </html>
