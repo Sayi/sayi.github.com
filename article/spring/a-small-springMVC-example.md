@@ -1,13 +1,28 @@
-## Spring MVC 3 入门示例
-> 目标：输入一个url地址，显示页面，页面内容从后台获取。  
-> ![](result.png) 
-
+# Spring MVC 3 入门示例
+> 要做什么：输入一个url地址，显示页面，页面内容从后台获取。  
 
 1. 准备：目录结构，依赖架包  
 首先创建基本的动态web工程的目录，如同下面的结构：  
-![](web-dir.png)  
-在下载的spring-framword版本的dist目录下，有发布的各种用途的jar包，需要什么架包就使用什么架包。在这个入门级的程序中，我们没有使用到数据库，所以不需要org.springframework.jdbc.RELEASE.jar架包，由于依赖于common-log，所以需要commons-logging.jar。本示例所需架包如下图：  
-![](lib.png)
+
+        ---- spring3-mvc-example\  
+                    | -- src\  
+                    | -- webapps\  
+                            | -- META-INF\  
+                            | -- WEB-INF\  
+                                    | -- lib\  
+                                    | -- web.xml  
+在下载的spring-framword版本的dist目录下，有发布的各种用途的jar包，需要什么架包就使用什么架包。在这个入门级的程序中，我们没有使用到数据库，所以不需要org.springframework.jdbc.RELEASE.jar架包，由于依赖于common-log，所以需要commons-logging.jar。本示例所需架包如下图：   
+
+        ------lib\
+               | -- commons-logging-1.1.1.jar
+               | -- jstl-1.1.2.jar
+               | -- org.springframework.asm-3.1.3.RELEASE.jar
+               | -- org.springframework.beans-3.1.3.RELEASE.jar
+               | -- org.springframework.context-3.1.3.RELEASE.jar
+               | -- org.springframework.core-3.1.3.RELEASE.jar
+               | -- org.springframework.expression-3.1.3.RELEASE.jar
+               | -- org.springframework.web-3.1.3.RELEASE.jar
+               | -- org.springframework.web.servlet-3.1.3.RELEASE.jar  
 
 2. web.xml配置：DispatcherServlet  
 Spring MVC围绕着DispatcherServlet这个核心进行设计的，包括处理请求、URL映射、视图解析、本地化和主题解析等。
@@ -94,6 +109,6 @@ Spring MVC围绕着DispatcherServlet这个核心进行设计的，包括处理�
 至此，完整的目录结构如下：  
 ![](end-result.png)  
 访问：http://localhost:port/spring3-mvc-example/show  
-
+![](result.png)
 
 
