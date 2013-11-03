@@ -6,12 +6,14 @@
 <meta name="viewport"
     content="width=device-width, initial-scale=1, user-scalable=no">
 <link rel="stylesheet" href="../../stylesheets/styles.css">
+<link rel="stylesheet" href="../../stylesheets/font-awesome.min.css">
 <link rel="stylesheet" href="../../stylesheets/page.css">
 <link href="../../javascripts/google-code-prettify/prettify.css" type="text/css" rel="stylesheet" />
 <script src="../../javascripts/google-code-prettify/prettify.js"></script>
 <title>Spring MVC 3 入门示例</title>
 </head>
 <body onload="prettyPrint()"><article>
+<div class="fix-right-top switch-bg"><i class="icon-adjust"></i></div>
 <h1 id="spring-mvc-3">Spring MVC 3 入门示例</h1>
 <blockquote>
 <p>要做什么：输入一个url地址，显示页面，页面内容从后台获取。  </p>
@@ -143,5 +145,13 @@ Spring MVC围绕着DispatcherServlet这个核心进行设计的，包括处理�
 </ol>
 
 </ARTICLE>
+<script src="../../javascripts/jquery-1.8.0.min.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $(".switch-bg").click(function(){
+            $("body").toggleClass("bg");
+        });
+    })
+</script>
 </body>
 </html>

@@ -6,10 +6,12 @@
 <meta name="viewport"
     content="width=device-width, initial-scale=1, user-scalable=no">
 <link rel="stylesheet" href="../../stylesheets/styles.css">
+<link rel="stylesheet" href="../../stylesheets/font-awesome.min.css">
 <link rel="stylesheet" href="../../stylesheets/page.css">
 <title>Markdown</title>
 </head>
 <body>
+<div class="fix-right-top switch-bg"><i class="icon-adjust"></i></div>
 <article>
 
 <h1>
@@ -283,5 +285,13 @@ Introduction
 </code></pre>
 
 </article>
+<script src="../../javascripts/jquery-1.8.0.min.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $(".switch-bg").click(function(){
+            $("body").toggleClass("bg");
+        });
+    })
+</script>
 </body>
 </html>
