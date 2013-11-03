@@ -543,8 +543,9 @@ font-weight: 700;
 position: absolute;
 }
 .author-info{
+  line-height: 28px;
   word-wrap: break-word;
-margin-left: 180px;
+margin-left: 160px;
 padding-top: 10px;
 }
 .author-info div{
