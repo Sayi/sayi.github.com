@@ -492,7 +492,6 @@ background-color: #39c;
 } */
 .category{
 font-family: 'Comic Sans MS';
-padding-left: 2em;
 margin-bottom: 2em;
 }
 .category-title{
@@ -542,7 +541,6 @@ font-weight: 700;
 }
 .author-card{
 position: absolute;
-left: 2em;
 }
 .author-info{
   word-wrap: break-word;
