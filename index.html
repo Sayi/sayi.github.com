@@ -13,6 +13,10 @@
     <![endif]-->
 
 <style type="text/css">
+#introduce{
+	width:860px;
+	margin:0 auto;
+}
 ul{
 list-style: none;
 }
@@ -43,12 +47,12 @@ float: right;
 </style>
 </head>
 <body>
-	<ul class="choice-nav" data-hide="choice">
+	<ul class="fix-right-top choice-nav" data-hide="choice">
 			
 			<li data-show="introduce" class="selected" ></li>
 			<li data-show="contents"></li>
 		</ul>
-	<div class="wrapper" style="padding-top:20px;">
+	<div class="wrapper">
 		<div  id="introduce" class="choice">
 			<div class="qingchun">
 			<img src="images/qingchun.jpg" alt="">
@@ -68,24 +72,30 @@ float: right;
 			</header>
 		</div>
 		<section id="contents" style="display:none;" class="choice">
-			<h3>Contents 目录</h3>
-			<ul>
-				<li>Central Authentication Service----单点登录
+			<div class="category">
+				<div class="category-title">Central Authentication Service----单点登录</div>
+				<div class="category-links">
 					<ul>
 						<li><a href="javascript:;">Single sign-on (SSO)</a></li>
 						<li><a href="javascript:;">JASIG CAS简介及CAS Protocol介绍</a></li>
 						<li><a href="javascript:;">CAS server</a></li>
 						<li><a href="javascript:;">CAS client</a></li>
 					</ul>
-				</li>
-				<li>Lightweight Directory Access Protocol
+				</div>
+			</div>
+			<div class="category">
+				<div class="category-title">Lightweight Directory Access Protocol</div>
+				<div class="category-links">
 					<ul>
 						<li><a href="javascript:;">Apache DS以及浏览管理工具</a></li>
 						<li><a href="javascript:;">Apache Directory LDAP API</a></li
 						<li><a href="javascript:;">Spring Ldap 参考</a></li>
 					</ul>
-				</li>
-				<li>The Java Program Language 
+				</div>
+			</div>
+			<div class="category">
+				<div class="category-title">The Java Program Language </div>
+				<div class="category-links">
 					<ul>
 						<li><a href="javascript:;">Java Mail</a></li>
 						<li><a href="javascript:;">Json and XML</a></li>
@@ -93,9 +103,17 @@ float: right;
 						<li><a href="javascript:;">任务调度框架Quartz</a></li>
 						<li><a href="javascript:;">缓存框架Ehcache</a></li>
 					</ul>
-				</li>
-				<li>Java Virtual Machine(JVM) </li>
-				<li>Spring 3
+				</div>
+			</div>
+			<div class="category">
+				<div class="category-title">Java Virtual Machine(JVM) </div>
+				<div class="category-links">
+					
+				</div>
+			</div>
+			<div class="category">
+				<div class="category-title">Spring 3</div>
+				<div class="category-links">
 					<ul>
 						<li><a href="article/spring/a-small-springMVC-example.html">Spring MVC 3入门示例</a></li>
 						<li><a href="javascript:;">Spring Annotation(@Valid、@ModelAttribute、@PathVariable)</a></li>
@@ -110,59 +128,92 @@ float: right;
 						<li><a href="article/spring/aop-pointcut-bean.html">AOP：AspectJ pointcut designators---bean</a></li>
 						<li><a href="javascript:;">Spring HttpMessageConvert</a></li>
 					</ul>
-				</li> 
-				<li>Log 日志 
+				</div>
+			</div>
+			<div class="category">
+				<div class="category-title">Log 日志  </div>
+				<div class="category-links">
+					
 					<ul>
 						<li><a href="article/ant/ant.md">Log4J</a></li>
 						<li><a href="javascript:;">SLF4J</a></li>
 					</ul>
-				</li>
-				<li>前端技术
+				</div>
+			</div>
+			<div class="category">
+				<div class="category-title">前端技术 </div>
+				<div class="category-links">
+					
 					<ul>
 						<li><a href="javascript:;">Bootstrap</a></li>
 						<li><a href="javascript:;">Jquery及其插件Plugin</a></li>
 						<li><a href="javascript:;">client validation</a></li>
 						<li><a href="javascript:;">模块化的SeaJs(玉伯)</a></li>
 					</ul>
-				</li>
-				<li>服务器
+				</div>
+			</div>
+			<div class="category">
+				<div class="category-title">服务器 </div>
+				<div class="category-links">
+					
 					<ul>
 						<li><a href="javascript:;">Nginx</a></li>
 						<li><a href="javascript:;">Tomcat</a></li>
 						<li><a href="javascript:;">IBM WebSphere Application Server</a></li>
 					</ul>
-				</li>
-				<li>数据库
+				</div>
+			</div>
+			<div class="category">
+				<div class="category-title">数据库 </div>
+				<div class="category-links">
+					
 					<ul>
 						<li><a href="javascript:;">连接池C3P0、Druid及实现原理</a></li>
 						<li><a href="article/mysql/index.html">MYSQL 记录</a></li>
 						<li><a href="javascript:;">DB2 初使用</a></li>
 						<li><a href="javascript:;">Oracle</a></li>
 					</ul>
-				</li>
-				<li>Web 记
+				</div>
+			</div>
+			<div class="category">
+				<div class="category-title">Web 记 </div>
+				<div class="category-links">
+					
 					<ul>
 						<li><a href="javascript:;">Restful Service</a></li>
 						<li><a href="article/webNote1/markdown.html">Markdown</a></li>
 						<li><a href="javascript:;">Sublime Text</a></li>
 					</ul>
-				</li>
-				<li>项目构建
+				</div>
+			</div>
+			<div class="category">
+				<div class="category-title">项目构建 </div>
+				<div class="category-links">
+					
 					<ul>
 						<li><a href="article/ant/ant.html">Ant的使用</a></li>
 						<li><a href="javascript:;">Maven</a></li>
 					</ul>
-				</li>
-				<li class="python">
-					<h3>Python--Life is short, you need Python</h3>
+				</div>
+			</div>
+			<div class="category">
+				<div class="category-title python">Python--Life is short, you need Python </div>
+				<div class="category-links">
 					<ul>
 						<li><a href="javascript:;">Python语言基础</a></li>
 						<li><a href="javascript:;">Python Library 常见库使用</a></li>
 						<li><a href="javascript:;">PyQt4 GUI开发</a></li>
 						<li><a href="javascript:;">豆瓣日记桌面GUI开发</a></li>
 					</ul>
-				</li>
-			</ul>
+				</div>
+			</div>
+			<div class="author">
+				<div class="author-card"><img class="img-circle" src="images/portrait.jpg"></div>
+				<div class="author-info"><div>Sayi</div>
+				<div>adasai90@gmail.com</div>
+				<div><a href="http://weibo.com/sayihorse" class="btn btn-follow">Follow</a></div>
+				</div>
+			</div>
 		</section>
 	</div>
 	<script src="javascripts/scale.fix.js"></script>
