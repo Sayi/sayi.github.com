@@ -21,6 +21,13 @@ pre {
 h1, h2, h3, h4{
     color: #222;
 }
+h6{
+    color:#fff;
+    background-color: #2C9E7A;
+    text-shadow: none;
+    padding: 1px 8px;
+    display: inline-block;
+}
 
 blockquote:before,  blockquote:after{
 content: "";
