@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="viewport"
+    content="width=device-width, initial-scale=1, user-scalable=no">
+<link rel="stylesheet" href="../../stylesheets/styles.css">
+<link rel="stylesheet" href="../../stylesheets/font-awesome.min.css">
+<link rel="stylesheet" href="../../stylesheets/page.css">
+<link href="../../javascripts/google-code-prettify/prettify.css" type="text/css" rel="stylesheet" />
+<script src="../../javascripts/google-code-prettify/prettify.js"></script>
+<title>Apache Maven</title>
+</head>
+<body onload="prettyPrint()">
+<div class="fix-right-top switch-bg"><i class="icon-adjust"></i></div>
+<article>
+
+<h1 id="apache-maven">Apache Maven</h1>
+<p>Maven，在Yiddish语言中，意味着 <em>知识的积累</em> ，最早是用来在Jakarta Turbine项目中试图去简化构建过程，在这个项目中有若干个工程，每个工程都包含着稍微不同的ant构建文件，并且版本库中存放着的很多jars包，因此我们需要一种标准的方式去构建项目，一个对项目结构的清晰定义，一种简便的发布项目信息的方式和一种在若干项目中分享jars包的途径。  </p>
+<p>Maven的主要目标是让开发人员在最短的时间内理解开发工作的完整状态，为了实现这个目标，有几点需要去解决：  </p>
+<ul>
+<li>使构建过程更容易</li>
+<li>提供统一的构建系统<br />
+Maven允许项目使用项目对象模型POM和一系列所有项目共享的插件，提供统一构建的系统。一旦你熟悉一个Maven项目如何建立，你就知道所有的Maven项目的构建，这会在浏览许多项目时节省很多时间。</li>
+<li>提供优质的项目信息</li>
+<li>提供最佳实践的指导<br />
+Maven的目的是收集当前的最佳实践发展的原则，并可以很容易地在那个方向引导项目。</li>
+<li>允许透明的迁移到新特性</li>
+</ul>
+<h2 id="maven">Maven 安装</h2>
+<h4 id="maven_1">独立的Maven安装文件</h4>
+<p>Maven提供了命令行，我们可以通过命令行进行操作，在maven官网上可以下载maven的安装文件，解压缩后，设置系统的Path,然后敲下 <code>mvn -v</code>,输出版本信息如下：  </p>
+<pre><code>C:\Users\Sayi&gt;mvn -v
+Apache Maven 3.1.1 (0728685237757ffbf44136acec0402957f723d9a; 2013-09-17 23:22:22+0800)
+Maven home: D:\Sayi\apache-maven-3.1.1\bin\..
+Java version: 1.7.0_25, vendor: Oracle Corporation
+Java home: C:\Java\jdk1.7.0_25\jre
+Default locale: zh_CN, platform encoding: GBK
+OS name: "windows 8", version: "6.2", arch: "amd64", family: "windows"
+</code></pre>
+<h4 id="eclipse-maven-m2e">Eclipse的Maven插件 ---- <a href="http://www.eclipse.org/m2e/">m2e</a></h4>
+<p>下载m2e插件，在eclipse的preference--Maven中可以更改Maven的配置，通常都内嵌了某个版本的Maven。
+在插件的首选项配置中，可以勾选上Download Artiface Sources来同时下载源码。在首选项Maven--Templates下可以看到一些插件书写的模版。</p>
+<h2 id="maven-setting-xml">Maven 用户配置--setting.xml</h2>
+<p>用户配置有全局配置和用户配置两个文件，全局配置在maven解压缩后的conf/setting.xml下，而用户配置都在系统用户目录下的.m2/setting.xml。如下列出一些基本配置项：  </p>
+<h6 id="localrepository">localRepository 配置本地仓库路径</h6>
+<!--?prettify lang=xml?-->
+
+<pre><code>&lt;localRepository&gt;F:/Sayi/MavenRepo/m2/&lt;/localRepository&gt;
+</code></pre>
+<h6 id="mirror-oschina">mirror 下载镜像配置,如使用国内OSchina的镜像服务:</h6>
+<!--?prettify lang=xml?-->
+
+<pre><code>&lt;mirrors&gt;
+      &lt;!-- mirror | Specifies a repository mirror site to use instead of a given
+          repository. The repository that | this mirror serves has an ID that matches
+          the mirrorOf element of this mirror. IDs are used | for inheritance and direct
+          lookup purposes, and must be unique across the set of mirrors. | --&gt;
+      &lt;mirror&gt;
+          &lt;id&gt;nexus-osc&lt;/id&gt;
+          &lt;mirrorOf&gt;*&lt;/mirrorOf&gt;
+          &lt;name&gt;Nexus osc&lt;/name&gt;
+          &lt;url&gt;http://maven.oschina.net/content/groups/public/&lt;/url&gt;
+      &lt;/mirror&gt;
+&lt;/mirrors&gt;
+</code></pre>
+<h6 id="profiles">profiles 根据环境参数激活的配置文件列表</h6>
+<!--?prettify lang=xml?-->
+
+<pre><code>&lt;profile&gt;
+    &lt;id&gt;jdk-1.7&lt;/id&gt;
+
+    &lt;activation&gt;
+    &lt;jdk&gt;1.7&lt;/jdk&gt;
+&lt;/activation&gt;
+
+&lt;repositories&gt;
+    &lt;repository&gt;
+        &lt;id&gt;nexus&lt;/id&gt;
+        &lt;name&gt;local private nexus&lt;/name&gt;
+        &lt;url&gt;http://maven.oschina.net/content/groups/public/&lt;/url&gt;
+        &lt;releases&gt;
+            &lt;enabled&gt;true&lt;/enabled&gt;
+        &lt;/releases&gt;
+        &lt;snapshots&gt;
+            &lt;enabled&gt;false&lt;/enabled&gt;
+        &lt;/snapshots&gt;
+    &lt;/repository&gt;
+&lt;/repositories&gt;
+&lt;pluginRepositories&gt;
+    &lt;pluginRepository&gt;
+        &lt;id&gt;nexus&lt;/id&gt;
+        &lt;name&gt;local private nexus&lt;/name&gt;
+        &lt;url&gt;http://maven.oschina.net/content/groups/public/&lt;/url&gt;
+        &lt;releases&gt;
+            &lt;enabled&gt;true&lt;/enabled&gt;
+        &lt;/releases&gt;
+        &lt;snapshots&gt;
+            &lt;enabled&gt;false&lt;/enabled&gt;
+        &lt;/snapshots&gt;
+    &lt;/pluginRepository&gt;
+&lt;/pluginRepositories&gt;
+&lt;/profile&gt;
+</code></pre>
+<h2 id="maven-pom-xml">Maven 项目配置--pom.xml</h2>
+<h2 id="maven_2">Maven 插件</h2>
+<p>Maven的核心是一个可执行的插件框架，所有的任务都是通过插件完成的。主要分为两类插件：<br />
+1 构建插件 <build/><br />
+2 报告插件 <reporting/> 
+这些插件组织在包 org/apache/maven/plugins下，下面将列出一些Maven插件：  </p>
+<h6 id="_1">核心插件</h6>
+<ul>
+<li>clean</li>
+<li>compiler</li>
+<li>deploy</li>
+<li>failsafe</li>
+<li>install</li>
+<li>resources</li>
+<li>site</li>
+</ul>
+<h6 id="_2">包工具插件</h6>
+<ul>
+<li>ear</li>
+<li>jar</li>
+<li>rar</li>
+<li>war</li>
+</ul>
+<h6 id="_3">报告插件</h6>
+<ul>
+<li>changelog</li>
+<li>changes</li>
+<li>chekstyle</li>
+<li>doap</li>
+<li>javadoc</li>
+<li>jxr</li>
+<li>pmd</li>
+</ul>
+<h6 id="_4">工具</h6>
+<ul>
+<li>ant</li>
+<li>antrun</li>
+<li>archetype</li>
+<li>dependency</li>
+<li>help</li>
+<li>patch</li>
+<li>pdf</li>
+<li>release</li>
+</ul>
+<p>还有很多第三方插件，比如mojo项目中的包 org/codehaus/mojo下的插件，还有google code下。比如<br />
+<em> sql
+</em> apache tomcat
+* jetty</p>
+<h2 id="maven_3">自己开发一个Maven插件示例</h2>
+<h6 id="_5">插件命名</h6>
+<p>插件名称应该是形如 <code>&lt;yourplugin&gt;-maven-plugin</code> ，比如</p>
+<h6 id="_6">用来做什么</h6>
+<p>仅仅创建一个目录，如果目录已存在，则什么都不做，尽管这可以使用antrun插件来完成。</p>
+<h2 id="maven_4">Maven项目示例</h2>
+<p>在这个项目中，我们将开发一个工具类，提供方法截取字符串，为了体现依赖的配置，使用common-lang3.jar中的类进行处理，最后生成这个工具类的jar包。</p>
+<h6 id="maven_5">建立Maven工程</h6>
+<p>典型的Maven工程目录约定如下：  </p>
+<pre><code>sayi-maven
+`-- src
+    |-- main
+    |   `-- java
+    |       `-- org
+    |           `-- sayi
+    |               `-- utils
+    |                   `-- App.java
+    |   `-- resources
+    `-- test
+        `-- java
+            `-- org
+                `-- sayi
+                    `-- utils
+                        `-- AppTest.java
+        `-- resources
+`-- target
+|-- pom.xml
+</code></pre>
+<p>完整的标准目录结构解释如下，其中src包括了构建项目所有的资源，target目录则是所有构建的输出：  </p>
+<pre><code>src/main/java   Application/Library sources
+src/main/resources  Application/Library resources
+src/main/filters    Resource filter files
+src/main/assembly   Assembly descriptors
+src/main/config     Configuration files
+src/main/scripts    Application/Library scripts
+src/main/webapp     Web application sources
+src/test/java   Test sources
+src/test/resources  Test resources
+src/test/filters    Test resource filter files
+src/site    Site
+pom.xml
+LICENSE.txt     Project's license
+NOTICE.txt  Notices and attributions required by libraries that the project depends on
+README.txt  Project's readme
+</code></pre>
+<p>使用命令行 <code>mvn archetype:generate</code>可以基于一些原型创建工程，这些原型提供了默认的目录结构，maven提供了一些标准的原型，如maven-archetype-quickstart、maven-archetype-webapp、maven-archetype-plugin  </p>
+<pre><code>mvn archetype:generate \
+  -DarchetypeGroupId=org.apache.maven.archetypes \
+  -DgroupId=org.sayi.utils \
+  -DartifactId=sayi-maven
+</code></pre>
+<p>也可以使用 <code>mvn archetype:create</code>创建项目：  </p>
+<pre><code>mvn archetype:create -DgroupId=hellosayi -DartifactId=simple -DpackageName=org.sayi.utils  
+-DarchetypeArtifactId=maven-archetype-webapp -DinteractiveMode=false
+</code></pre>
+<p>在Eclipse中通过新建Maven Project来创建项目，比如选择了quickstart原型后，产生的目录如下：<br />
+<img alt="" src="directory.png" /></p>
+<h6 id="pom-xml">配置pom.xml</h6>
+<p>此项目中依赖于第三方jar包，我们配置依赖关系如下，其中的依赖jar包的配置可以通过搜索maven仓库或者官网的doc进行配置：  </p>
+<!--?prettify lang=xml?-->
+
+<pre><code>    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;junit&lt;/groupId&gt;
+            &lt;artifactId&gt;junit&lt;/artifactId&gt;
+            &lt;version&gt;3.8.1&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.apache.commons&lt;/groupId&gt;
+            &lt;artifactId&gt;commons-lang3&lt;/artifactId&gt;
+            &lt;version&gt;3.1&lt;/version&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/project&gt;
+</code></pre>
+<p>配置完成后，jar包会下载到本地仓库中，在eclipse工程的build path中，可以看到已依赖此架包<br />
+<img alt="" src="dependency.png" /></p>
+<h6 id="codeing">codeing编写代码</h6>
+<!--?prettify lang=java?-->
+
+<pre><code>package org.sayi.utils;
+
+import org.apache.commons.lang3.StringUtils;
+
+public abstract class App 
+{
+   public static String trim(String str){
+       return StringUtils.trim(str);
+   }
+}
+</code></pre>
+<h6 id="_7">清理、测试、编译</h6>
+<p>本示例不包括测试代码，但是测试代码的执行命令是 <code>mvn test</code>,清理target下构建的输出使用命令 <code>mvn clean</code>,编译使用命令 <code>mvn compile</code>  </p>
+<h6 id="jar">打包成jar</h6>
+<p>由于项目pom中设置了 <code>&lt;packaging&gt;jar&lt;/packaging&gt;</code>，所以直接运行命令：  </p>
+<pre><code>mvn package
+</code></pre>
+<p>将会在Target根目录下生成jar包，如果需要安装到本地的仓库中，可以直接使用命令：  </p>
+<pre><code>mvn install
+</code></pre>
+<h6 id="ftp">ftp上传到服务器</h6>
+
+
+</ARTICLE>
+<script src="../../javascripts/jquery-1.8.0.min.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $(".switch-bg").click(function(){
+            $("body").toggleClass("bg");
+        });
+    })
+</script>
+</body>
+</html>
