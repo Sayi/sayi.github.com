@@ -15,7 +15,6 @@
 <body onload="prettyPrint()">
 <div class="fix-right-top switch-bg"><i class="icon-adjust"></i></div>
 <article>
-
 <h1 id="apache-maven">Apache Maven</h1>
 <p>Maven，在Yiddish语言中，意味着 <em>知识的积累</em> ，最早是用来在Jakarta Turbine项目中试图去简化构建过程，在这个项目中有若干个工程，每个工程都包含着稍微不同的ant构建文件，并且版本库中存放着的很多jars包，因此我们需要一种标准的方式去构建项目，一个对项目结构的清晰定义，一种简便的发布项目信息的方式和一种在若干项目中分享jars包的途径。  </p>
 <p>Maven的主要目标是让开发人员在最短的时间内理解开发工作的完整状态，为了实现这个目标，有几点需要去解决：  </p>
@@ -42,6 +41,32 @@ OS name: "windows 8", version: "6.2", arch: "amd64", family: "windows"
 <h4 id="eclipse-maven-m2e">Eclipse的Maven插件 ---- <a href="http://www.eclipse.org/m2e/">m2e</a></h4>
 <p>下载m2e插件，在eclipse的preference--Maven中可以更改Maven的配置，通常都内嵌了某个版本的Maven。
 在插件的首选项配置中，可以勾选上Download Artiface Sources来同时下载源码。在首选项Maven--Templates下可以看到一些插件书写的模版。</p>
+<h2 id="maven-lilfecycle">Maven lilfecycle生命周期</h2>
+<p>构建生命周期是由一系列构建短语(build phases)定义的，每个短语代表了一个阶段，默认的生命周期如下：  </p>
+<pre><code>validate    validate the project is correct and all necessary information is available.
+initialize  initialize build state, e.g. set properties or create directories.
+generate-sources    generate any source code for inclusion in compilation.
+process-sources     process the source code, for example to filter any values.
+generate-resources  generate resources for inclusion in the package.
+process-resources   copy and process the resources into the destination directory, ready for packaging.
+compile     compile the source code of the project.
+process-classes     post-process the generated files from compilation, for example to do bytecode enhancement on Java classes.
+generate-test-sources   generate any test source code for inclusion in compilation.
+process-test-sources    process the test source code, for example to filter any values.
+generate-test-resources     create resources for testing.
+process-test-resources  copy and process the resources into the test destination directory.
+test-compile    compile the test source code into the test destination directory
+process-test-classes    post-process the generated files from test compilation, for example to do bytecode enhancement on Java classes. For Maven 2.0.5 and above.
+test    run tests using a suitable unit testing framework. These tests should not require the code be packaged or deployed.
+prepare-package     perform any operations necessary to prepare a package before the actual packaging. This often results in an unpacked, processed version of the package. (Maven 2.1 and above)
+package     take the compiled code and package it in its distributable format, such as a JAR.
+pre-integration-test    perform actions required before integration tests are executed. This may involve things such as setting up the required environment.
+integration-test    process and deploy the package if necessary into an environment where integration tests can be run.
+post-integration-test   perform actions required after integration tests have been executed. This may including cleaning up the environment.
+verify  run any checks to verify the package is valid and meets quality criteria.
+install     install the package into the local repository, for use as a dependency in other projects locally.
+deploy  done in an integration or release environment, copies the final package to the remote repository for sharing with other developers and projects.
+</code></pre>
 <h2 id="maven-setting-xml">Maven 用户配置--setting.xml</h2>
 <p>用户配置有全局配置和用户配置两个文件，全局配置在maven解压缩后的conf/setting.xml下，而用户配置都在系统用户目录下的.m2/setting.xml。如下列出一些基本配置项：  </p>
 <h6 id="localrepository">localRepository 配置本地仓库路径</h6>
@@ -104,6 +129,7 @@ OS name: "windows 8", version: "6.2", arch: "amd64", family: "windows"
 &lt;/profile&gt;
 </code></pre>
 <h2 id="maven-pom-xml">Maven 项目配置--pom.xml</h2>
+<p>Project Object Mode(POM)是Maven最基本的组件</p>
 <h2 id="maven_2">Maven 插件</h2>
 <p>Maven的核心是一个可执行的插件框架，所有的任务都是通过插件完成的。主要分为两类插件：<br />
 1 构建插件 <build/><br />
@@ -151,14 +177,9 @@ OS name: "windows 8", version: "6.2", arch: "amd64", family: "windows"
 <em> sql
 </em> apache tomcat
 * jetty</p>
-<h2 id="maven_3">自己开发一个Maven插件示例</h2>
-<h6 id="_5">插件命名</h6>
-<p>插件名称应该是形如 <code>&lt;yourplugin&gt;-maven-plugin</code> ，比如</p>
-<h6 id="_6">用来做什么</h6>
-<p>仅仅创建一个目录，如果目录已存在，则什么都不做，尽管这可以使用antrun插件来完成。</p>
-<h2 id="maven_4">Maven项目示例</h2>
+<h2 id="maven_3">Maven项目示例</h2>
 <p>在这个项目中，我们将开发一个工具类，提供方法截取字符串，为了体现依赖的配置，使用common-lang3.jar中的类进行处理，最后生成这个工具类的jar包。</p>
-<h6 id="maven_5">建立Maven工程</h6>
+<h6 id="maven_4">建立Maven工程</h6>
 <p>典型的Maven工程目录约定如下：  </p>
 <pre><code>sayi-maven
 `-- src
@@ -243,7 +264,7 @@ public abstract class App
    }
 }
 </code></pre>
-<h6 id="_7">清理、测试、编译</h6>
+<h6 id="_5">清理、测试、编译</h6>
 <p>本示例不包括测试代码，但是测试代码的执行命令是 <code>mvn test</code>,清理target下构建的输出使用命令 <code>mvn clean</code>,编译使用命令 <code>mvn compile</code>  </p>
 <h6 id="jar">打包成jar</h6>
 <p>由于项目pom中设置了 <code>&lt;packaging&gt;jar&lt;/packaging&gt;</code>，所以直接运行命令：  </p>
@@ -253,8 +274,115 @@ public abstract class App
 <pre><code>mvn install
 </code></pre>
 <h6 id="ftp">ftp上传到服务器</h6>
+<h2 id="maven_5">Maven插件开发</h2>
+<h6 id="_6">插件命名</h6>
+<p>插件名称应该是形如 <code>&lt;yourplugin&gt;-maven-plugin</code> ，比如</p>
+<h6 id="_7">用来做什么</h6>
+<p>回显信息</p>
+<h6 id="_8">代码</h6>
+<p>选择原型mojo开发插件，核心类继承自org.apache.maven.plugin.AbstractMojo类(Maven plai old java object):  </p>
+<!--?prettify lang=java?-->
 
+<pre><code>package org.sayi.plugin;
 
+import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
+
+/**
+ * @goal echo
+ */
+public class EchoMojo extends AbstractMojo {
+
+    /**
+     * @parameter expression="${echo.word}" default-value="echo msg..."
+     */
+    private String word;
+
+    public void execute() throws MojoExecutionException {
+        getLog().info(word);
+    }
+}
+</code></pre>
+<p>其中两个注解@goal和@parameter标识了运行的时机和参数的值</p>
+<p>pom文件如下所示，依赖了maven-plugin-api：  </p>
+<!--?prettify lang=xml?-->
+
+<pre><code>&lt;project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;groupId&gt;org.sayi.plugin&lt;/groupId&gt;
+    &lt;artifactId&gt;polly-maven-plugin&lt;/artifactId&gt;
+    &lt;packaging&gt;maven-plugin&lt;/packaging&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+    &lt;name&gt;sayi-plugin-polly Maven Mojo&lt;/name&gt;
+    &lt;url&gt;http://maven.apache.org&lt;/url&gt;
+    &lt;properties&gt;
+        &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+    &lt;/properties&gt;
+
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.apache.maven&lt;/groupId&gt;
+            &lt;artifactId&gt;maven-plugin-api&lt;/artifactId&gt;
+            &lt;version&gt;2.0&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;junit&lt;/groupId&gt;
+            &lt;artifactId&gt;junit&lt;/artifactId&gt;
+            &lt;version&gt;3.8.1&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/project&gt;
+</code></pre>
+<h6 id="_9">测试插件</h6>
+<p>通过命令行cmd进入pom.xml目录，运行命令： <code>mvn groupId:artifactId:version:goal</code>:  </p>
+<pre><code>E:\Sayi\sayi-plugin-polly&gt;mvn org.sayi.plugin:polly-maven-plugin:0.0.1-SNAPSHOT:echo -Decho.word="this is echo plugin
+by sayi"
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] Building sayi-plugin-polly Maven Mojo 0.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO]
+[INFO] --- polly-maven-plugin:0.0.1-SNAPSHOT:echo (default-cli) @ polly-maven-plugin ---
+[INFO] this is echo plugin by sayi
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 0.285s
+[INFO] Finished at: Fri Nov 08 11:02:58 CST 2013
+[INFO] Final Memory: 6M/106M
+[INFO] ------------------------------------------------------------------------
+</code></pre>
+<p>其中-Decho.word 则为代码中@parameter定义的表达式</p>
+<h6 id="_10">项目中使用插件</h6>
+<p>此插件install后，在其它项目中就可以使用了，在pom中配置插件如下：  </p>
+<!--?prettify lang=xml?-->
+
+<pre><code>&lt;build&gt;
+    &lt;plugins&gt;
+        &lt;plugin&gt;
+            &lt;groupId&gt;org.sayi.plugin&lt;/groupId&gt;
+            &lt;artifactId&gt;polly-maven-plugin&lt;/artifactId&gt;
+            &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+            &lt;executions&gt;
+                &lt;execution&gt;
+                    &lt;id&gt;default-sayi-compile&lt;/id&gt;
+                    &lt;phase&gt;compile&lt;/phase&gt;
+                    &lt;goals&gt;
+                        &lt;goal&gt;echo&lt;/goal&gt;
+                    &lt;/goals&gt;
+                    &lt;configuration&gt;
+                      &lt;word&gt;hello compile&lt;/word&gt;
+                  &lt;/configuration&gt; 
+              &lt;/execution&gt;
+          &lt;/executions&gt;
+      &lt;/plugin&gt;
+  &lt;/plugins&gt;
+&lt;/build&gt;
+</code></pre>
+<p>其中通过configuration配置了参数值，phase配置了绑定echo插件到生命周期的compile阶段，运行 <code>mvn compile</code>即可看到回显输出。</p>
 </ARTICLE>
 <script src="../../javascripts/jquery-1.8.0.min.js"></script>
 <script type="text/javascript">

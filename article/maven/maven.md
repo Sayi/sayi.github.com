@@ -27,6 +27,34 @@ Maven提供了命令行，我们可以通过命令行进行操作，在maven官�
 #### Eclipse的Maven插件 ---- [m2e](http://www.eclipse.org/m2e/)
 下载m2e插件，在eclipse的preference--Maven中可以更改Maven的配置，通常都内嵌了某个版本的Maven。
 在插件的首选项配置中，可以勾选上Download Artiface Sources来同时下载源码。在首选项Maven--Templates下可以看到一些插件书写的模版。
+
+## Maven lilfecycle生命周期
+构建生命周期是由一系列构建短语(build phases)定义的，每个短语代表了一个阶段，默认的生命周期如下：  
+
+    validate    validate the project is correct and all necessary information is available.
+    initialize  initialize build state, e.g. set properties or create directories.
+    generate-sources    generate any source code for inclusion in compilation.
+    process-sources     process the source code, for example to filter any values.
+    generate-resources  generate resources for inclusion in the package.
+    process-resources   copy and process the resources into the destination directory, ready for packaging.
+    compile     compile the source code of the project.
+    process-classes     post-process the generated files from compilation, for example to do bytecode enhancement on Java classes.
+    generate-test-sources   generate any test source code for inclusion in compilation.
+    process-test-sources    process the test source code, for example to filter any values.
+    generate-test-resources     create resources for testing.
+    process-test-resources  copy and process the resources into the test destination directory.
+    test-compile    compile the test source code into the test destination directory
+    process-test-classes    post-process the generated files from test compilation, for example to do bytecode enhancement on Java classes. For Maven 2.0.5 and above.
+    test    run tests using a suitable unit testing framework. These tests should not require the code be packaged or deployed.
+    prepare-package     perform any operations necessary to prepare a package before the actual packaging. This often results in an unpacked, processed version of the package. (Maven 2.1 and above)
+    package     take the compiled code and package it in its distributable format, such as a JAR.
+    pre-integration-test    perform actions required before integration tests are executed. This may involve things such as setting up the required environment.
+    integration-test    process and deploy the package if necessary into an environment where integration tests can be run.
+    post-integration-test   perform actions required after integration tests have been executed. This may including cleaning up the environment.
+    verify  run any checks to verify the package is valid and meets quality criteria.
+    install     install the package into the local repository, for use as a dependency in other projects locally.
+    deploy  done in an integration or release environment, copies the final package to the remote repository for sharing with other developers and projects.
+
 ## Maven 用户配置--setting.xml
 用户配置有全局配置和用户配置两个文件，全局配置在maven解压缩后的conf/setting.xml下，而用户配置都在系统用户目录下的.m2/setting.xml。如下列出一些基本配置项：  
 ###### localRepository 配置本地仓库路径
@@ -90,7 +118,7 @@ Maven提供了命令行，我们可以通过命令行进行操作，在maven官�
 
 
 ## Maven 项目配置--pom.xml
-
+Project Object Mode(POM)是Maven最基本的组件
 
 ## Maven 插件
 Maven的核心是一个可执行的插件框架，所有的任务都是通过插件完成的。主要分为两类插件：  
@@ -132,12 +160,6 @@ Maven的核心是一个可执行的插件框架，所有的任务都是通过插
 * sql
 * apache tomcat
 * jetty
-
-## 自己开发一个Maven插件示例
-###### 插件命名
-插件名称应该是形如 `<yourplugin>-maven-plugin` ，比如
-###### 用来做什么
-仅仅创建一个目录，如果目录已存在，则什么都不做，尽管这可以使用antrun插件来完成。
 
 ## Maven项目示例
 在这个项目中，我们将开发一个工具类，提供方法截取字符串，为了体现依赖的配置，使用common-lang3.jar中的类进行处理，最后生成这个工具类的jar包。
@@ -244,3 +266,112 @@ Maven的核心是一个可执行的插件框架，所有的任务都是通过插
 
 ###### ftp上传到服务器
 
+## Maven插件开发
+###### 插件命名
+插件名称应该是形如 `<yourplugin>-maven-plugin` ，比如
+###### 用来做什么
+回显信息
+###### 代码
+选择原型mojo开发插件，核心类继承自org.apache.maven.plugin.AbstractMojo类(Maven plai old java object):  
+
+<!--?prettify lang=java?-->
+    package org.sayi.plugin;
+
+    import org.apache.maven.plugin.AbstractMojo;
+    import org.apache.maven.plugin.MojoExecutionException;
+
+    /**
+     * @goal echo
+     */
+    public class EchoMojo extends AbstractMojo {
+
+        /**
+         * @parameter expression="${echo.word}" default-value="echo msg..."
+         */
+        private String word;
+
+        public void execute() throws MojoExecutionException {
+            getLog().info(word);
+        }
+    }
+其中两个注解@goal和@parameter标识了运行的时机和参数的值
+
+pom文件如下所示，依赖了maven-plugin-api：  
+
+<!--?prettify lang=xml?-->
+    <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+        <modelVersion>4.0.0</modelVersion>
+        <groupId>org.sayi.plugin</groupId>
+        <artifactId>polly-maven-plugin</artifactId>
+        <packaging>maven-plugin</packaging>
+        <version>0.0.1-SNAPSHOT</version>
+        <name>sayi-plugin-polly Maven Mojo</name>
+        <url>http://maven.apache.org</url>
+        <properties>
+            <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        </properties>
+
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-plugin-api</artifactId>
+                <version>2.0</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>3.8.1</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </project>
+
+###### 测试插件
+通过命令行cmd进入pom.xml目录，运行命令： `mvn groupId:artifactId:version:goal`:  
+
+    E:\Sayi\sayi-plugin-polly>mvn org.sayi.plugin:polly-maven-plugin:0.0.1-SNAPSHOT:echo -Decho.word="this is echo plugin
+    by sayi"
+    [INFO] Scanning for projects...
+    [INFO]
+    [INFO] ------------------------------------------------------------------------
+    [INFO] Building sayi-plugin-polly Maven Mojo 0.0.1-SNAPSHOT
+    [INFO] ------------------------------------------------------------------------
+    [INFO]
+    [INFO] --- polly-maven-plugin:0.0.1-SNAPSHOT:echo (default-cli) @ polly-maven-plugin ---
+    [INFO] this is echo plugin by sayi
+    [INFO] ------------------------------------------------------------------------
+    [INFO] BUILD SUCCESS
+    [INFO] ------------------------------------------------------------------------
+    [INFO] Total time: 0.285s
+    [INFO] Finished at: Fri Nov 08 11:02:58 CST 2013
+    [INFO] Final Memory: 6M/106M
+    [INFO] ------------------------------------------------------------------------
+其中-Decho.word 则为代码中@parameter定义的表达式
+
+###### 项目中使用插件
+此插件install后，在其它项目中就可以使用了，在pom中配置插件如下：  
+
+<!--?prettify lang=xml?-->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.sayi.plugin</groupId>
+                <artifactId>polly-maven-plugin</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <id>default-sayi-compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>echo</goal>
+                        </goals>
+                        <configuration>
+                          <word>hello compile</word>
+                      </configuration> 
+                  </execution>
+              </executions>
+          </plugin>
+      </plugins>
+    </build>
+其中通过configuration配置了参数值，phase配置了绑定echo插件到生命周期的compile阶段，运行 `mvn compile`即可看到回显输出。
