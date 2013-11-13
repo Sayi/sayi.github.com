@@ -63,9 +63,8 @@ background-color: #2C9E7A;
 border-left: 4px solid #39c;
 padding-left: 40px !important;
 }
-.bg{color: #222;
-text-shadow: 0px 2px 3px #555;
-background: #474747 url(../images/bgpage.png);
+.bg article, .bg strong, .bg h1, .bg h2,.bg h3,.bg h4,.bg h5,.bg h6{
+    color:#222;
 }
 .bg blockquote:before,.bg blockquote:after{
     color: #fff;

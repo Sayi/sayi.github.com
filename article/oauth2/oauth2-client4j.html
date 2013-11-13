@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="viewport"
+    content="width=device-width, initial-scale=1, user-scalable=no">
+<link rel="stylesheet" href="../../stylesheets/styles.css">
+<link rel="stylesheet" href="../../stylesheets/font-awesome.min.css">
+<link rel="stylesheet" href="../../stylesheets/page.css">
+<link href="../../javascripts/google-code-prettify/prettify.css" type="text/css" rel="stylesheet" />
+<script src="../../javascripts/google-code-prettify/prettify.js"></script>
+<title>Oauth2-client4j doc</title>
+</head>
+<body onload="prettyPrint()">
+<div class="fix-right-top switch-bg"><i class="icon-adjust"></i></div>
+<article>
+
+<h1 id="oauth2-client4j">Oauth2 client4j</h1>
+<p>OAuth2 client for Java,beased on Apache Oltu,
+implements the OAuth 2.0 protocol for authentication and authorization.</p>
+<h2 id="why-oauth2-client4j">Why oauth2-client4j?</h2>
+<p>want to code easier,extend easier.  </p>
+<h2 id="download-and-maven">Download and Maven</h2>
+<h2 id="usage">Usage</h2>
+<p>OAuth 2.0 is a relatively simple protocol,
+you should register your application with the servers provider and request to get <strong>access_token</strong> 
+which can be send to the provider's API that you want to access.<br />
+This example shows how to receive an access token from Google.<br />
+step 1. Build OAuth2 Service  </p>
+<!--?prettify lang=java?-->
+
+<pre><code>OAuthService service = new OAuthServiceBuilder()
+                .provider(GoogleProvider.class)
+                .apiKey(KEY_ID)
+                .apiSecret(API_SECRET)
+                .callback(REDIRECT_URL)
+                .build();
+</code></pre>
+<p>step 2. Send an Authentication Request  </p>
+<!--?prettify lang=java?-->
+
+<pre><code>service.getAuthorizationUrl();
+</code></pre>
+<p>step 3. Get Authorization Code from redirect URI
+depend your application,native、app or web.For web,you can just get parameter like this:</p>
+<!--?prettify lang=java?-->
+
+<pre><code>String code = request.getParamert("code");
+</code></pre>
+<p>step 4. Exchange OAuth2 Code for Access Token
+default,return the json Response:</p>
+<!--?prettify lang=java?-->
+
+<pre><code>OAuthJSONAccessTokenResponse oAuthResponse = service.accessToken(code);
+oAuthResponse.getAccessToken();
+</code></pre>
+<h2 id="additional-features">Additional features</h2>
+<ul>
+<li>Attach additional parameters to authentication request</li>
+</ul>
+<!--?prettify lang=java?-->
+
+<pre><code>    service.attachAuthParam(PARAM_KEY,PARAM_VAL).getAuthorizationUrl();
+</code></pre>
+<ul>
+<li>Provide universal method to parse authorization code </li>
+</ul>
+<!--?prettify lang=java?-->
+
+<pre><code>    OAuthAuthzResponse oar = OAuthAuthzResponse.oauthCodeAuthzResponse(request);
+    String code = oar.getCode();
+</code></pre>
+<ul>
+<li>Provide custom response readers to extract access_token or more
+two ways:  </li>
+<li>implement your response class,and pass parameter to get access token:  </li>
+</ul>
+<!--?prettify lang=java?-->
+
+<pre><code>    GitHubTokenResponse response = service.accessToken(code, GitHubTokenResponse.class);
+</code></pre>
+<ol>
+<li>
+<p>every provider class,like GoogleProvider.class,have method:  </p>
+<pre><code>OAuthClientResponse getAccessTokenResponse(){}
+</code></pre>
+<p>just return the  response class and code like this: <code>service.accessToken(code)</code>,
+if return null,default response is OAuthJSONAccessTokenResponse.</p>
+</li>
+<li>
+<p>Use your own HTTP client</p>
+</li>
+</ol>
+<!--?prettify lang=java?-->
+
+<pre><code>    service.customHttpClinet(client).accessToken(code);
+</code></pre>
+<h2 id="extend">extend</h2>
+<ul>
+<li>add new provider class to use powerful func  </li>
+</ul>
+<!--?prettify lang=java?-->
+
+<pre><code>    .provider(new Provider(){...})
+</code></pre>
+<ul>
+<li>an universal usage---do not want to add new provider class for standard oauth2 protocol</li>
+</ul>
+<!--?prettify lang=java?-->
+
+<pre><code>    .provider(GoogleProvider.class) -----&gt; .authorizationLocation(AUTH_URL).tokenLocation(TOKEN_URL)
+</code></pre>
+<p>use</p>
+<!--?prettify lang=java?-->
+
+<pre><code>    service.accessToken(code, requestType, ResponseClass.class)`
+</code></pre>
+
+</ARTICLE>
+<script src="../../javascripts/jquery-1.8.0.min.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $(".switch-bg").click(function(){
+            $("body").toggleClass("bg");
+        });
+    })
+</script>
+</body>
+</html>
