@@ -14,12 +14,16 @@ border: 1px solid rgba(0, 0, 0, 0.2);
 -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
+pre {
+    display: inline-block;
+    width: 100%;
+}
 code{
     background-color:rgba(248, 248, 248, 0.9);
     text-shadow: none;
 }
 h1, h2, h3, h4{
-    color: #222;
+    color: #eaeaea;
 }
 h6{
     color:#fff;
@@ -32,7 +36,7 @@ h6{
 blockquote:before,  blockquote:after{
 content: "";
 font-size: 100px;
-color: #57ad68;
+color: #fff;
 font-family: Helvetica, arial, '宋体';
 position: absolute;
 }
@@ -47,7 +51,7 @@ bottom: 0px;
 right: 10px;
 }
  blockquote{
-color: #222;
+color: #eaeaea;
 border-left:none;
 quotes: "" "";
 padding: 20px 60px 20px 80px;
@@ -63,14 +67,45 @@ background-color: #2C9E7A;
 border-left: 4px solid #39c;
 padding-left: 40px !important;
 }
-.bg article, .bg strong, .bg h1, .bg h2,.bg h3,.bg h4,.bg h5,.bg h6{
+article{
+        width: 75%;
+margin: 0 auto;
+padding: 28px;
+border: 1px solid #FCF8F8;
+box-shadow: 5px 5px 1px 0 rgba(253, 247, 247, 0.2);
+background-color: #474747;
+color:#eaeaea;
+}
+.bg article{
+border: 1px solid #FCF8F8;
+box-shadow: 5px 5px 1px 0 rgba(253, 247, 247, 0.2);
+background-color: #fff;
+color:#222;
+}
+strong{
+    color:#eaeaea;
+}
+.bg strong{
     color:#222;
 }
-.bg blockquote:before,.bg blockquote:after{
-    color: #fff;
+.bg h1,.bg h2,.bg h3,.bg h4,.bg h5,.bg h6,.bg blockquote{
+    color:#222;
+}
+.bg blockquote:before, .bg blockquote:after{
+    color:#57ad68;
+}
+
+body.english article{
+    font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
 }
 .switch-bg{
     color:#39c;
     cursor: pointer;
     text-shadow:none;
 }
+
+/* @media (max-width: 900px) {
+  article {
+   width:100%;
+  }
+} */
