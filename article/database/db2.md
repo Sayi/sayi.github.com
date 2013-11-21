@@ -1,66 +1,692 @@
-C:\IBM\SQLLIB\BIN>db2val
-DBI1379I  db2val 命令正在运行。这可能要花几分钟才能完成。
+# DB2
+## 数据库管理
 
-DBI1333I  验证 DB2 副本 DB2SAYI 的安装文件成功。
+###### 实例
+在Windows系统中，安装时默认创建一个实例名称为“DB2”(linux下是db2inst1)，一个数据库服务器上可以创建多个用于不同目的实例，所有这些实例都是相互
+独立的，可以使用命令`db2 set db2instance=instance_name`来切换实例。实例层上常用的DB2命令：
 
-DBI1339I  验证实例 DB2 成功。
+	db2ilist  显示系统您当前的所有实例清单
+	db2 get instance  显示当前运行的实例
+	db2start  启动当前实例
+	db2stop  停止当前实例
+	db2 force applications all  关闭所有连接，确保没有连接
+	db2icrt instance_name 创建一个新的实例
+	db2idrop instance_name  删除一个实例
 
-DBI1343I  成功完成了 db2val 命令。有关详细信息，请参阅日志文件
+	C:\IBM\SQLLIB\BIN>db2icrt DB_TEST
+	DB20000I  DB2ICRT 命令成功完成。
 
-C:\Users\sayi\DOCUME~1\DB2LOG\db2val-Mon Nov 18 21_58_29 2013.log。
-C:\IBM\SQLLIB\BIN>db2level
-DB21085I  此实例或安装（适用的实例名："DB2"）使用 "32" 位和级别标识为 "0602010E"
-的 DB2 代码发行版 "SQL10051"。
-参考标记为 "DB2 v10.5.100.64"、"special_31160" 和 "IP23520_31160"，修订包为
-"1"。
-产品使用 DB2 副本名 "DB2SAYI" 安装在 "C:\IBM\SQLLIB" 中。
+	C:\IBM\SQLLIB\BIN>db2ilist
+	DB_TEST
+	DB2
 
-C:\IBM\SQLLIB\BIN>db2 list db directory
-SQL1031N  在指示的文件系统中找不到数据库目录。  SQLSTATE=58031
+	C:\IBM\SQLLIB\BIN>db2 get instance
 
-实例层上常用的DB2命令
-db2start  启动当前实例
-db2stop  停止当前实例
-db2 force applications all  关闭所有连接，确保没有连接
-db2icrt  创建一个新的实例
-db2idrop  删除一个实例
-db2ilist  显示系统您当前的所有实例清单
-db2 get instance  显示当前运行的实例
+	 当前数据库管理器实例是：DB2
 
-数据库层的命令/SQL 语句
-db2 list db directory  显示所有已创建的数据库
-db2 create database(db)  创建一个新的数据库
-db2 drop database  删除一个数据库
-db2 connect to <database_name> user [username] using [pwd] 连接数据库
-db2 create table/create view/create index  分别创建表，视图，和索引
 
+	C:\IBM\SQLLIB\BIN>set db2instance = db_test
+
+
+
+###### 数据库
 随着数据库的创建，有几个默认的对象也同时被创建：表空间，表，缓冲池，日志文件。因为
 创建这些对象需要一点时间，所以执行数据库创建过程需要几分钟。
+数据库层的命令/SQL 语句：
 
+	db2 list db directory  显示所有已创建的数据库
+	db2 create database(db)  创建一个新的数据库
+	db2 drop database  删除一个数据库
+	db2 connect to <database_name> user [username] using [pwd] 连接数据库
+
+	C:\IBM\SQLLIB\BIN>db2 list db directory
+	SQL1057W  系统数据库目录为空。  SQLSTATE=01606
+
+	C:\IBM\SQLLIB\BIN>db2 create db imp5db
+	DB20000I  CREATE DATABASE 命令成功完成。
+
+	C:\IBM\SQLLIB\BIN>db2 list db directory
+
+	 系统数据库目录
+
+	 目录中的条目数 = 1
+
+	数据库 1 条目：
+
+	 数据库别名                      = IMP5DB
+	 数据库名称                               = IMP5DB
+	 本地数据库目录                  = C:
+	 数据库发行版级别                = d.00
+	 注释                            =
+	 目录条目类型                    = 间接
+	 目录数据库分区号                  = 0
+	 备用服务器主机名                =
+	 备用服务器端口号                =
+	C:\IBM\SQLLIB\BIN>db2 connect to imp5db user db2admin [using  password]
+
+	   数据库连接信息
+
+	 数据库服务器         = DB2/NT 9.7.1
+	 SQL 授权标识         = DB2ADMIN
+	 本地数据库别名       = IMP5DB
+
+
+###### 表
 所有的 DB 数据库对象标识名都可以一分为二，模式就是此名字的前半部分。
-<模式名>.<对象名> 
-一个标识名称必须是独一无二的。在没有指定模式的情况下连接数据库并创建或引用数据库对
-象时，DB2 使用用户 ID 作为模式名称来连接数据库
+<模式名>.<对象名>，一个标识名称必须是独一无二的。在没有指定模式的情况下连接数据库并创建或引用数据库对
+象时，DB2 使用用户 ID 作为模式名称来连接数据库。  
+
+	db2 list tables [for user] 列出所有用户表
+	db2 list tables for system  列出所有系统表
+	db2 describe table table_name  列出表结构
+	db2 create table/create view/create index  分别创建表，视图，和索引
 
 
-db2 list tables [for user] 列出所有用户表
-db2 list tables for system  列出所有系统表
-db2 describe table table_name  列出表结构
+	C:\IBM\SQLLIB\BIN>db2 create table test(id varchar(32),username varchar(32))
+	DB20000I  SQL 命令成功完成。
 
-查看命令帮助
-db2 ? db2start
-查看错误码信息sqlstatu
-db2 ? 22001 
+	C:\IBM\SQLLIB\BIN>db2 list tables 　　
+							     
+	表/视图				 模式		类型  创建时间
+	------------------------------- --------------- ----- --------------------------
+
+	TEST                            DB2ADMIN        T     2013-11-19-10.23.11.410002
+
+	1 条记录已选择。
 
 
-SQL error code:  
- Version 9.1 for z/OS
-New to z/OS?
+	C:\IBM\SQLLIB\BIN>db2 describe table test
 
-DB2 Version 9.1 for z/OS > Troubleshooting for DB2 > DB2 codes > SQL codes
-SQL error codes
+					数据类型                      列
+	列名                             模式       数据类型名称      长     小数位
+	 NULL
+	------------------------------- --------- ------------------- ---------- ----- -
+	-----
+	ID                              SYSIBM    VARCHAR                     32     0
+	是
+	USERNAME                        SYSIBM    VARCHAR                     32     0
+	是
 
-SQL return codes that are preceded by a minus sign (-) indicate that the SQL statement execution was unsuccessful.
+	2 条记录已选择。
+
+
+###### 帮助
+
+
+db2 ? db2start 查看命令帮助
+
+db2 ? 22001 查看错误码信息sqlstate
+
+
+## DB2 基本SQL、数据类型
+![](datatype.png)  
+#### 数据类型主要包括以下三个：  
+###### String data types
+* CHARACTER(n) 	Fixed-length character strings with a length of n bytes. n must be greater than 0 and not greater than 255. The default length is 1.
+
+* VARCHAR(n) 	Varying-length character strings with a maximum length of n bytes. n must be greater than 0 and less than a number that depends on the page size of the table space. The maximum length is 32704.
+
+* CLOB(n) 	Varying-length character strings with a maximum of n characters. n cannot exceed 2 147 483 647. The default length is 1.
+
+* GRAPHIC(n) 	Fixed-length graphic strings that contain n double-byte characters. n must be greater than 0 and less than 128. The default length is 1.
+
+* VARGRAPHIC(n) 	Varying-length graphic strings. The maximum length, n, must be greater than 0 and less than a number that depends on the page size of the table space. The maximum length is 16352.
+
+* DBCLOB(n) 	Varying-length strings of double-byte characters with a maximum of n double-byte characters. n cannot exceed 1 073 741 824. The default length is 1.
+
+* BINARY(n) 	Fixed-length or varying-length binary strings with a length of n bytes. n must be greater than 0 and not greater than 255. The default length is 1.
+
+* VARBINARY(n) 	Varying-length binary strings with a length of n bytes. The length of n must be greater than 0 and less than a number that depends on the page size of the table space. The maximum length is 32704.
+
+* BLOB(n) 	Varying-length binary strings with a length of n bytes. n cannot exceed 2 147 483 647. The default length is 1.
+
+###### Numeric data types
+* SMALLINT 	Small integers. A small integer is binary integer with a precision of 15 bits. The range is -32768 to +32767.
+
+* INTEGER or
+INT
+	Large integers. A large integer is binary integer with a precision of 31 bits. The range is -2147483648 to +2147483647.
+
+* BIGINT 	Big integers. A big integer is a binary integer with a precision of 63 bits. The range of big integers is -9223372036854775808 to +9223372036854775807.
+
+* DECIMAL or
+NUMERIC
+	A decimal number is a packed decimal number with an implicit decimal point. The position of the decimal point is determined by the precision and the scale of the number. The scale, which is the number of digits in the fractional part of the number, cannot be negative or greater than the precision. The maximum precision is 31 digits.
+
+All values of a decimal column have the same precision and scale. The range of a decimal variable or the numbers in a decimal column is -n to +n, where n is the largest positive number that can be represented with the applicable precision and scale. The maximum range is 1 - 1031 to 1031 - 1.
+
+* DECFLOAT 	A decimal floating-point value is an IEEE 754r number with a decimal point. The position of the decimal point is stored in each decimal floating-point value. The maximum precision is 34 digits.
+
+The range of a decimal floating-point number is either 16 or 34 digits of precision; the exponent range is respectively 10-383 to 10+384 or 10-6143 to 10+6144.
+
+* REAL 	A single-precision floating-point number is a short floating-point number of 32 bits. The range of single-precision floating-point numbers is approximately -7.2E+75 to 7.2E+75. In this range, the largest negative value is about -5.4E-79, and the smallest positive value is about 5.4E-079.
+
+* DOUBLE 	A double-precision floating-point number is a long floating-point number of 64-bits. The range of double-precision floating-point numbers is approximately -7.2E+75 to 7.2E+75. In this range, the largest negative value is about -5.4E-79, and the smallest positive value is about 5.4E-079.
+
+###### Date, time, and timestamp data types。
+Although storing dates and times as numeric values is possible, using datetime data types is recommended. The datetime data types are DATE, TIME, and TIMESTAMP.
+
+* DATE 	A date is a three-part value representing a year, month, and day in the range of 0001-01-01 to 9999-12-31.
+
+* TIME 	A time is a three-part value representing a time of day in hours, minutes, and seconds, in the range of 00.00.00 to 24.00.00.
+
+* TIMESTAMP 	Start of changeA timestamp is a seven-part value representing a date and time by year, month, day, hour, minute, second, and microsecond, in the range of 0001-01-01-00.00.00.000000000 to 9999-12-31-24.00.00.000000000 with nanosecond precision. Timestamps can also hold timezone information.End of change
+
+#### 基本sql
+###### create table
+###### drop table
+###### insert
+###### update
+###### select
+###### delete
+
+
+
+## DB2 内置函数
+参见附录。
+###### 常用函数
+* COUNT
+* MAX、MIIN
+* SUM
+* CHAR
+* DATE
+* DAY
+* DAYOFMONTH
+* DAYOFWEEK
+* DAYOFYEAR
+* LENGTH
+* TO_CHAR
+* TO_DATE
+* SUBSTR
+* to_number
+* POSSTR
+* quarter
+
+## DB2 Expressions表达式
+cast
+
+## DB2 特殊寄存器
+一个特殊的寄存器是一个存储区域，一个应用程序定义的DB2?和用于存储信息，可以在SQL语句中引用。
+* Datetime special registers  
+
+    CURRENT DATE
+    CURRENT TIME
+    CURRENT TIMESTAMP
+    SELECT current date FROM sysibm.sysdummy1 
+    SELECT current time FROM sysibm.sysdummy1 
+    SELECT current timestamp FROM sysibm.sysdummy1
+
+    YEAR (current timestamp) 
+    MONTH (current timestamp) 
+    DAY (current timestamp) 
+    HOUR (current timestamp) 
+    MINUTE (current timestamp) 
+    SECOND (current timestamp) 
+    MICROSECOND (current timestamp)
+
+    current date + 1 YEAR 
+    current date + 3 YEARS + 2 MONTHS + 15 DAYS 
+    current time + 5 HOURS - 3 MINUTES + 10 SECONDS
+
+
+## 安装DB2(Windows)
+###### 运行安装向导
+进入安装向导界面：  
+![](install-1.png)  
+![](install-2.png)  
+![](install-3.png)  
+![](install-4.png)  
+![](install-5.png)  
+![](install-6.png)  
+
+###### 验证安装
+
+	C:\IBM\SQLLIB\BIN>db2val
+	DBI1379I  db2val 命令正在运行。这可能要花几分钟才能完成。
+
+	DBI1333I  验证 DB2 副本 DB2SAYI 的安装文件成功。
+
+	DBI1339I  验证实例 DB2 成功。
+
+	DBI1343I  成功完成了 db2val 命令。有关详细信息，请参阅日志文件
+	C:\Users\sayi\DOCUME~1\DB2LOG\db2val-Mon Nov 18 21_58_29 2013.log。
+
+	C:\IBM\SQLLIB\BIN>db2level
+	DB21085I  此实例或安装（适用的实例名："DB2"）使用 "32" 位和级别标识为 "0602010E"
+	的 DB2 代码发行版 "SQL10051"。
+	参考标记为 "DB2 v10.5.100.64"、"special_31160" 和 "IP23520_31160"，修订包为
+	"1"。
+	产品使用 DB2 副本名 "DB2SAYI" 安装在 "C:\IBM\SQLLIB" 中。
+
+## 卸载 DB2 产品 (Windows)
+此任务提供从 Windows 操作系统中彻底除去 DB2® 产品时需要执行的步骤。仅当不再需要现有 DB2 实例和数据库时才执行此任务。
+关于此任务
+
+如果正在卸载缺省 DB2 副本，并且系统上有其他 DB2 副本，请使用 db2swtch 命令在继续卸载之前选择一个新的缺省副本。此外，如果 DB2 管理服务器 (DAS) 正在要除去的那个副本下运行，请将该 DAS 移到不会被除去的副本下。否则，在卸载之后需要使用 db2admin create 命令重新创建 DAS，并且要重新配置 DAS 才能使某些功能起作用。
+
+要从 Windows 中除去 DB2 产品：
+过程
+
+    （可选）使用控制中心或 drop database 命令删除所有数据库。确保不再需要这些数据库。如果删除了数据库，那么所有的数据都会丢失。
+    停止所有 DB2 进程和服务。可以通过 Windows“服务”面板或者发出 db2stop 命令来完成此任务。如果没有停止 DB2 服务和进程就试图除去 DB2 产品，那么将接收到一条警告，该警告包含内存中保留有 DB2 DLL 的进程和服务的列表。如果您将使用“添加或删除程序”来删除 DB2 产品，那么可以选择是否执行此步骤。
+    可以通过以下两个选项来除去 DB2 产品：
+
+    添加/删除程序
+        可通过 Windows 的“控制面板”访问它，使用“添加或删除程序”窗口来除去 DB2 产品。有关从 Windows 操作系统中除去软件产品的更多信息，请参阅操作系统的帮助。
+    db2unins 命令
+        可以从 DB2DIR\bin 目录运行 db2unins 命令以除去 DB2 产品、功能部件或语言。通过使用此命令，在添加了 /p 参数的情况下可以同时卸载多个 DB2 产品。可以使用响应文件并通过 /u 参数来卸载 DB2 产品、功能部件或语言。有关更多信息，请参阅 db2unins 命令主题。
+
+结果
+下一步做什么
+
+遗憾的是，使用“控制面板”中的“添加或删除程序”功能或者使用 db2unins /p 命令或 db2unins /u 命令并不是始终都能除去 DB2 产品。仅当上述方法失败时才能尝试使用以下卸载选项。
+
+为了强制除去 Windows 系统中的所有 DB2 副本，运行 db2unins /f 命令。此命令将对系统上的所有 DB2 副本都执行粗暴的强制卸载。除了用户数据（例如，DB2 数据库）之外的所有资源都将被强制删除。在运行带 /f 参数的此命令之前，请参阅 db2unins 命令以了解详细信息。
+
+
+## 附录：
+#### 函数
+###### Aggregate functions
+An aggregate function receives a set of values for each argument (such as the values of a column) and returns a single-value result for the set of input values. Certain rules apply to all aggregate functions.
+
+   
+    AVG
+    The AVG function returns the average of a set of numbers.
+    CORRELATION
+    The CORRELATION function returns the coefficient of the correlation of a set of number pairs.
+    COUNT
+    The COUNT function returns the number of rows or values in a set of rows or values.
+    COUNT_BIG
+    The COUNT_BIG function returns the number of rows or values in a set of rows or values. It is similar to COUNT except that the result can be greater than the maximum value of an integer.
+    COVARIANCE or COVARIANCE_SAMP
+    The COVARIANCE and COVARIANCE_SAMP functions return the covariance (population) of a set of number pairs.
+    MAX
+    The MAX function returns the maximum value in a set of values.
+    MIN
+    The MIN function returns the minimum value in a set of values.
+    STDDEV or STDDEV_SAMP
+    The STDDEV or STDDEV_SAMP function returns the standard deviation (/n), or the sample standard deviation (/n-1), of a set of numbers.
+    SUM
+    The SUM function returns the sum of a set of numbers.
+    VARIANCE or VARIANCE_SAMP
+    The VARIANCE function returns the biased variance (/n) of a set of numbers. The VARIANCE_SAMP function returns the sample variance (/n-1) of a set of numbers.
+    XMLAGG
+    The XMLAGG function returns an XML sequence that contains an item for each non-null value in a set of XML values.
+
+
+###### Scalar functions
+A scalar function can be used wherever an expression can be used. The restrictions on the use of aggregate functions do not apply to scalar functions, because a scalar function is applied to single set of parameter values rather than to sets of values. The argument of a scalar function can be a function. However, the restrictions that apply to the use of expressions and aggregate functions also apply when an expression or aggregate function is used within a scalar function. For example, the argument of a scalar function can be a aggregate function only if a aggregate function is allowed in the context in which the scalar function is used.
+
+    ABS
+    The ABS function returns the absolute value of a number.
+    ACOS
+    The ACOS function returns the arc cosine of the argument as an angle, expressed in radians. The ACOS and COS functions are inverse operations.
+    ADD_MONTHS
+    The ADD_MONTHS function returns a date that represents expression plus a specified number of months.
+    ASCII
+    The ASCII function returns the leftmost character of the argument as an integer.
+    ASCII_CHR
+    The ASCII_CHR function returns the character that has the ASCII code value that is specified by the argument.
+    ASCII_STR
+    The ASCII_STR function returns an ASCII version of the string in the system ASCII CCSID. The system ASCII CCSID is the SBCS ASCII CCSID on a MIXED=NO system or the MIXED ASCII CCSID on a MIXED=YES system.
+    ASIN
+    The ASIN function returns the arc sine of the argument as an angle, expressed in radians. The ASIN and SIN functions are inverse operations.
+    ATAN
+    The ATAN function returns the arc tangent of the argument as an angle, expressed in radians. The ATAN and TAN functions are inverse operations.
+    ATANH
+    The ATANH function returns the hyperbolic arc tangent of a number, expressed in radians. The ATANH and TANH functions are inverse operations.
+    ATAN2
+    The ATAN2 function returns the arc tangent of x and y coordinates as an angle, expressed in radians.
+    BIGINT
+    The BIGINT function returns a big integer representation of either a number or a character or graphic string representation of a number.
+    BINARY
+    The BINARY function returns a BINARY (fixed-length binary string) representation of a string of any type or of a row ID type.
+    Start of changeBITAND, BITANDNOT, BITOR, BITXOR, and BITNOTEnd of change
+    The bit manipulation functions operate on the twos complement representation of the integer value of the input arguments. The functions return the result as a corresponding base 10 integer value in a data type that is based on the data type of the input arguments.
+    BLOB
+    The BLOB function returns a BLOB representation of a string of any type or of a row ID type.
+    CCSID_ENCODING
+    The CCSID_ENCODING function returns a string value that indicates the encoding scheme of a CCSID that is specified by the argument.
+    CEILING
+    The CEILING function returns the smallest integer value that is greater than or equal to the argument.
+    CHAR
+    The CHAR function returns a fixed-length character string representation of the argument.
+    CHARACTER_LENGTH
+    The CHARACTER_LENGTH function returns the length of the first argument in the specified string unit.
+    CLOB
+    The CLOB function returns a CLOB representation of a string.
+    COALESCE
+    The COALESCE function returns the value of the first nonnull expression.
+    COLLATION_KEY
+    The COLLATION_KEY function returns a varying-length binary string that represents the collation key of the argument in the specified collation.
+    COMPARE_DECFLOAT
+    The COMPARE_DECFLOAT function returns a SMALLINT value that indicates whether the two arguments are equal or unordered, or whether one argument is greater than the other.
+    CONCAT
+    The CONCAT function combines two compatible string arguments.
+    CONTAINS
+    The CONTAINS function searches a text search index using criteria that are specified in a search argument and returns a result about whether or not a match was found.
+    COS
+    The COS function returns the cosine of the argument, where the argument is an angle, expressed in radians. The COS and ACOS functions are inverse operations.
+    COSH
+    The COSH function returns the hyperbolic cosine of the argument, where the argument is an angle, expressed in radians.
+    DATE
+    The DATE function returns a date that is derived from a value.
+    DAY
+    The DAY function returns the day part of a value.
+    DAYOFMONTH
+    The DAYOFMONTH function returns the day part of a value. The function is similar to the DAY function, except DAYOFMONTH does not support a date or timestamp duration as an argument.
+    DAYOFWEEK
+    The DAYOFWEEK function returns an integer, in the range of 1 to 7, that represents the day of the week, where 1 is Sunday and 7 is Saturday. The DAYOFWEEK function is similar to the DAYOFWEEK_ISO function.
+    DAYOFWEEK_ISO
+    The DAYOFWEEK_ISO function returns an integer, in the range of 1 to 7, that represents the day of the week, where 1 is Monday and 7 is Sunday. The DAYOFWEEK_ISO function is similar to the DAYOFWEEK function.
+    DAYOFYEAR
+    The DAYOFYEAR function returns an integer, in the range of 1 to 366, that represents the day of the year, where 1 is January 1.
+    DAYS
+    The DAYS function returns an integer representation of a date.
+    DBCLOB
+    The DBCLOB function returns a DBCLOB representation of a character string value (with the single-byte characters converted to double-byte characters) or a graphic string value.
+    DECFLOAT
+    The DECFLOAT function returns a decimal floating-point representation of either a number or a character string representation of a number, a decimal number, an integer, a floating-point number, or a decimal floating-point number.
+    Start of changeDECFLOAT_FORMATEnd of change
+    The DECFLOAT_FORMAT function returns a DECFLOAT(34) value that is based on the interpretation of the input string using the specified format.
+    DECFLOAT_SORTKEY
+    The DECFLOAT_SORTKEY function returns a binary value that can be used when sorting DECFLOAT values. The sorting occurs in a manner that is consistent with the IEEE 754R specification on total ordering.
+    DECIMAL or DEC
+    The DECIMAL function returns a decimal representation of either a number or a character-string or graphic-string representation of a number, an integer, or a decimal number.
+    Start of changeDECODEEnd of change
+    The DECODE function compares each expression2 to expression1. If expression1 is equal to expression2, or both expression1 and expression2 are null, the value of the result-expression is returned. If no expression2 matches expression1, the value of else-expression is returned. Otherwise a null value is returned.
+    DECRYPT_BINARY, DECRYPT_BIT, DECRYPT_CHAR, and DECRYPT_DB
+    The decryption functions return a value that is the result of decrypting encrypted data. The decryption functions can decrypt only values that are encrypted by using the ENCRYPT_TDES function.
+    DEGREES
+    The DEGREES function returns the number of degrees of the argument, which is an angle, expressed in radians.
+    DIFFERENCE
+    The DIFFERENCE function returns a value, from 0 to 4, that represents the difference between the sounds of two strings, based on applying the SOUNDEX function to the strings. A value of 4 is the best possible sound match.
+    DIGITS
+    The DIGITS function returns a character string representation of the absolute value of a number.
+    DOUBLE_PRECISION or DOUBLE
+    The DOUBLE_PRECISION and DOUBLE functions returns a floating-point representation of either a number or a character-string or graphic-string representation of a number, an integer, a decimal number, or a floating-point number.
+    DSN_XMLVALIDATE
+    The DSN_XMLVALIDATE function returns an XML value that is the result of applying XML schema validation to the first argument of the function. DSN_XMLVALIDATE can validate XML data that has a maximum length of 2 GB - 1 byte.
+    EBCDIC_CHR
+    The EBCDIC_CHR function returns the character that has the EBCDIC code value that is specified by the argument.
+    EBCDIC_STR
+    The EBCDIC_STR function returns a string, in the system EBCDIC CCSID, that is an EBCDIC version of the string.
+    ENCRYPT_TDES
+    The ENCRYPT_TDES function returns a value that is the result of encrypting the first argument by using the Triple DES encryption algorithm. The function can also set the password that is used for encryption.
+    EXP
+    The EXP function returns a value that is the base of the natural logarithm (e), raised to a power that is specified by the argument. The EXP and LN functions are inverse operations.
+    EXTRACT
+    The EXTRACT function returns a portion of a date or timestamp, based on its arguments.
+    FLOAT
+    The FLOAT function returns a floating-point representation of either a number or a string representation of a number. FLOAT is a synonym for the DOUBLE function.
+    FLOOR
+    The FLOOR function returns the largest integer value that is less than or equal to the argument.
+    GENERATE_UNIQUE
+    The GENERATE_UNIQUE function returns a bit data character string that is unique, compared to any other execution of the same function.
+    GETHINT
+    The GETHINT function returns a hint for the password if a hint was embedded in the encrypted data. A password hint is a phrase that helps you remember the password with which the data was encrypted. For example, 'Ocean' might be used as a hint to help remember the password 'Pacific'.
+    GETVARIABLE
+    The GETVARIABLE function returns a varying-length character-string representation of the current value of the session variable that is identified by the argument.
+    GRAPHIC
+    The GRAPHIC function returns a fixed-length graphic-string representation of a character string or a graphic string value, depending on the type of the first argument.
+    HEX
+    The HEX function returns a hexadecimal representation of a value.
+    HOUR
+    The HOUR function returns the hour part of a value.
+    IDENTITY_VAL_LOCAL
+    The IDENTITY_VAL_LOCAL function returns the most recently assigned value for an identity column.
+    IFNULL
+    The IFNULL function returns the first nonnull expression.
+    INSERT
+    The INSERT function returns a string where, beginning at start in source-string, length characters have been deleted and insert-string has been inserted.
+    INTEGER or INT
+    The INTEGER function returns an integer representation of either a number or a character string or graphic string representation of an integer.
+    JULIAN_DAY
+    The JULIAN_DAY function returns an integer value that represents a number of days from January 1, 4713 B.C. (the start of the Julian date calendar) to the date that is specified in the argument.
+    LAST_DAY
+    The LAST_DAY scalar function returns a date that represents the last day of the month of the date argument.
+    LCASE
+    The LCASE function returns a string in which all the characters are converted to lowercase characters.
+    LEFT
+    The LEFT function returns a string that consists of the specified number of leftmost bytes of the specified string units.
+    LENGTH
+    The LENGTH function returns the length of a value.
+    LN
+    The LN function returns the natural logarithm of the argument. The LN and EXP functions are inverse operations.
+    LOCATE
+    The LOCATE function returns the position at which the first occurrence of an argument starts within another argument.
+    LOCATE_IN_STRING
+    The LOCATE_IN_STRING function returns the position at which an argument starts within a specified string.
+    LOG10
+    The LOG10 function returns the common logarithm (base 10) of a number.
+    LOWER
+    The LOWER function returns a string in which all the characters are converted to lowercase characters.
+    LPAD
+    The LPAD function returns a string that is composed of string-expression that is padded on the left, with pad or blanks. The LPAD function treats leading or trailing blanks in string-expression as significant.
+    LTRIM
+    Start of changeThe LTRIM function removes bytes from the beginning of a string expression based on the content of a trim expression.End of change
+    MAX
+    The MAX scalar function returns the maximum value in a set of values.
+    MICROSECOND
+    The MICROSECOND function returns the microsecond part of a value.
+    MIDNIGHT_SECONDS
+    The MIDNIGHT_SECONDS function returns an integer, in the range of 0 to 86400, that represents the number of seconds between midnight and the time that is specified in the argument.
+    MIN
+    The MIN scalar function returns the minimum value in a set of values.
+    MINUTE
+    The MINUTE function returns the minute part of a value.
+    MOD
+    The MOD function divides the first argument by the second argument and returns the remainder.
+    MONTH
+    The MONTH function returns the month part of a value.
+    MONTHS_BETWEEN
+    The MONTHS_BETWEEN function returns an estimate of the number of months between two arguments.
+    MQREAD
+    The MQREAD function returns a message from a specified MQSeries? location without removing the message from the queue.
+    MQREADCLOB
+    The MQREADCLOB function returns a message from a specified MQSeries location without removing the message from the queue.
+    MQRECEIVE
+    The MQRECEIVE function returns a message from a specified MQSeries location and removes the message from the queue.
+    MQRECEIVECLOB
+    The MQRECEIVECLOB function returns a message from a specified MQSeries location and removes the message from the queue.
+    MQSEND
+    The MQSEND function sends data to a specified MQSeries location, and returns a varying-length character string that indicates whether the function was successful or unsuccessful.
+    MULTIPLY_ALT
+    The MULTIPLY_ALT scalar function returns the product of the two arguments. This function is an alternative to the multiplication operator and is especially useful when the sum of the precisions of the arguments exceeds 31.
+    NEXT_DAY
+    The NEXT_DAY function returns a datetime value that represents the first weekday, named by string-expression, that is later than the date in expression.
+    NORMALIZE_DECFLOAT
+    The NORMALIZE_DECFLOAT function returns a DECFLOAT value that is the result of the argument, set to its simplest form. That is, a non-zero number that has any trailing zeros in the coefficient has those zeros removed by dividing the coefficient by the appropriate power of ten and adjusting the exponent accordingly. A zero has its exponent set to 0.
+    NORMALIZE_STRING
+    The NORMALIZE_STRING function takes a Unicode string argument and returns a normalized string that can be used for comparison.
+    NULLIF
+    The NULLIF function returns the null value if the two arguments are equal; otherwise, it returns the value of the first argument.
+    Start of changeNVLEnd of change
+    The NVL function returns the first argument that is not null.
+    OVERLAY
+    The OVERLAY function returns a string that is composed of one argument that is inserted into another argument at the same position where some number of bytes have been deleted.
+    Start of changePACKEnd of change
+    The PACK function returns a binary string value that contains a data type array and a packed representation of each non-null expression argument.
+    POSITION
+    The POSITION function returns the position of the first occurrence of an argument within another argument, where the position is expressed in terms of the string units that are specified.
+    POSSTR
+    The POSSTR function returns the position of the first occurrence of an argument within another argument.
+    POWER
+    The POWER? function returns the value of the first argument to the power of the second argument.
+    QUANTIZE
+    The QUANTIZE function returns a DECFLOAT value that is equal in value (except for any rounding) and sign to the first argument and that has an exponent that is set to equal the exponent of the second argument.
+    QUARTER
+    The QUARTER function returns an integer between 1 and 4 that represents the quarter of the year in which the date resides. For example, any dates in January, February, or March return the integer 1.
+    RADIANS
+    The RADIANS function returns the number of radians for an argument that is expressed in degrees.
+    RAISE_ERROR
+    The RAISE_ERROR function causes the statement that invokes the function to return an error with the specified SQLSTATE (along with SQLCODE -438) and error condition. The RAISE_ERROR function always returns the null value with an undefined data type.
+    RAND
+    The RAND function returns a random floating-point value between 0 and 1. An argument can be specified as an optional seed value.
+    REAL
+    The REAL function returns a single-precision floating-point representation of either a number or a string representation of a number.
+    REPEAT
+    The REPEAT function returns a character string that is composed of an argument that is repeated a specified number of times.
+    REPLACE
+    The REPLACE function replaces all occurrences of search-string in source-string with replace-string. If search-string is not found in source-string, source-string is returned unchanged.
+    RID
+    The RID function returns the record ID (RID) of a row. The RID is used to uniquely identify a row.
+    RIGHT
+    The RIGHT function returns a string that consists of the specified number of rightmost bytes or specified string unit from a string.
+    ROUND
+    The ROUND function returns a number that is rounded to the specified number of places to the right or left of the decimal place.
+    ROUND_TIMESTAMP
+    The ROUND_TIMESTAMP scalar function returns a timestamp that is rounded to the unit that is specified by the timestamp format string.
+    ROWID
+    The ROWID function returns a row ID representation of its argument.
+    RPAD
+    The RPAD function returns a string that is padded on the right with blanks or a specified string.
+    RTRIM
+    Start of changeThe RTRIM function removes bytes from the end of a string expression based on the content of a trim expression.End of change
+    SCORE
+    The SCORE function searches a text search index using criteria that are specified in a search argument and returns a relevance score that measures how well a document matches the query.
+    SECOND
+    Start of changeThe SECOND function returns the seconds part of a value with optional fractional seconds.End of change
+    SIGN
+    The SIGN function returns an indicator of the sign of the argument.
+    SIN
+    The SIN function returns the sine of the argument, where the argument is an angle, expressed in radians.
+    SINH
+    The SINH function returns the hyperbolic sine of the argument, where the argument is an angle, expressed in radians.
+    SMALLINT
+    The SMALLINT function returns a small integer representation either of a number or of a string representation of a number.
+    SOUNDEX
+    The SOUNDEX function returns a 4-character code that represents the sound of the words in the argument. The result can be compared to the results of the SOUNDEX function of other strings.
+    SOAPHTTPC and SOAPHTTPV
+    The SOAPHTTPC function returns a CLOB representation of XML data that results from a SOAP request to the web service that is specified by the first argument. The SOAPHTTPV function returns a VARCHAR representation of XML data that results from a SOAP request to the web service that is specified by the first argument.
+    SOAPHTTPNC and SOAPHTTPNV
+    The SOAPHTTPNC and SOAPHTTPNV functions allow you to specify a complete SOAP message as input and to return complete SOAP messages from the specified web service. The returned SOAP messages are CLOB or VARCHAR representations of the returned XML data.
+    SPACE
+    The SPACE function returns a character string that consists of the number of SBCS blanks that the argument specifies.
+    SQRT
+    The SQRT function returns the square root of the argument.
+    STRIP
+    The STRIP function removes blanks or another specified character from the end, the beginning, or both ends of a string expression.
+    SUBSTR
+    The SUBSTR function returns a substring of a string.
+    SUBSTRING
+    The SUBSTRING function returns a substring of a string.
+    TAN
+    The TAN function returns the tangent of the argument, where the argument is an angle, expressed in radians.
+    TANH
+    The TANH function returns the hyperbolic tangent of the argument, where the argument is an angle, expressed in radians.
+    TIME
+    The TIME function returns a time that is derived from a value.
+    TIMESTAMP
+    Start of changeThe TIMESTAMP function returns a TIMESTAMP WITHOUT TIME ZONE value from its argument or arguments.End of change
+    TIMESTAMPADD
+    The TIMESTAMPADD function returns the result of adding the specified number of the designated interval to the timestamp value.
+    TIMESTAMP_FORMAT
+    Start of changeThe TIMESTAMP_FORMAT function returns a TIMESTAMP WITHOUT TIME ZONE value that is based on the interpretation of the input string using the specified format.End of change
+    TIMESTAMP_ISO
+    The TIMESTAMP_ISO function returns a timestamp value that is based on a date, a time, or a timestamp argument.
+    TIMESTAMPDIFF
+    The TIMESTAMPDIFF function returns an estimated number of intervals of the type that is defined by the first argument, based on the difference between two timestamps.
+    Start of changeTIMESTAMP_TZEnd of change
+    The TIMESTAMP_TZ function returns a TIMESTAMP WITH TIME ZONE value from the input arguments.
+    TO_CHAR
+    The TO_CHAR function returns a character string representation of a timestamp value that has been formatted using a specified character template.
+    TO_DATE
+    The TO_DATE function returns a timestamp value that is based on the interpretation of the input string using the specified format.
+    Start of changeTO_NUMBEREnd of change
+    The TO_NUMBER function returns a DECFLOAT(34) value that is based on the interpretation of the input string using the specified format.
+    TOTALORDER
+    The TOTALORDER function returns an ordering for DECFLOAT values. The TOTALORDER function returns a small integer value that indicates how expression1 compares with expression2.
+    TRANSLATE
+    The TRANSLATE function returns a value in which one or more characters of the first argument might have been converted to other characters.
+    Start of changeTRIMEnd of change
+    The TRIM function removes bytes from the beginning, from the end, or from both the beginning and end of a string expression.
+    TRUNCATE or TRUNC
+    The TRUNCATE function returns the first argument, truncated as specified. Truncation is to the number of places to the right or left of the decimal point this is specified by the second argument.
+    TRUNC_TIMESTAMP
+    Start of changeThe TRUNC_TIMESTAMP function returns a TIMESTAMP WITHOUT TIME ZONE value that is the expression, truncated to the unit that is specified by the format-string.End of change
+    UCASE
+    The UCASE function returns a string in which all the characters have been converted to uppercase characters, based on the CCSID of the argument. The UCASE function is identical to the UPPER function.
+    UNICODE
+    The UNICODE function returns the Unicode UTF-16 code value of the leftmost character of the argument as an integer.
+    UNICODE_STR
+    The UNICODE_STR function returns a string in Unicode UTF-8 or UTF-16, depending on the specified option. The string represents a Unicode encoding of the input string.
+    UPPER
+    The UPPER function returns a string in which all the characters have been converted to uppercase characters.
+    VALUE
+    The VALUE function returns the value of the first non-null expression.
+    VARBINARY
+    The VARBINARY function returns a VARBINARY (varying-length binary string) representation of a string of any type.
+    VARCHAR
+    The VARCHAR function returns a varying-length character string representation of the value specified by the first argument. The first argument can be a character string, a graphic string, a datetime value, an integer number, a decimal number, a floating-point number, or a row ID value.
+    VARCHAR_FORMAT
+    The VARCHAR_FORMAT function returns a character string representation of the first argument in the format indicated by format-string.
+    VARGRAPHIC
+    The VARGRAPHIC function returns a varying-length graphic string representation of a the first argument. The first argument can be a character string value or a graphic string value.
+    VERIFY_GROUP_FOR_USER
+    The VERIFY_GROUP_FOR_USER function returns a value that indicates whether the primary authorization ID and the secondary authorization IDs that are associated with the first argument are in the authorization names that are specified in the list of the second argument.
+    VERIFY_ROLE_FOR_USER
+    The VERIFY_ROLE_FOR_USER function returns a value that indicates whether the roles that are associated with the authorization ID that is specified in the first argument are included in the role names that are specified in the list of the second argument.
+    VERIFY_TRUSTED_CONTEXT_ROLE_FOR_USER
+    The VERIFY_TRUSTED_CONTEXT_FOR_USER function returns a value that indicates whether the authorization ID that is associated with first argument has acquired a role in a trusted connection and whether that acquired role is included in the role names that are specified in the list of the second argument.
+    WEEK
+    The WEEK function returns an integer in the range of 1 to 54 that represents the week of the year. The week starts with Sunday, and January 1 is always in the first week.
+    WEEK_ISO
+    The WEEK_ISO function returns an integer in the range of 1 to 53 that represents the week of the year. The week starts with Monday and includes seven days. Week 1 is the first week of the year that contains a Thursday, which is equivalent to the first week that contains January 4.
+    XMLATTRIBUTES
+    The XMLATTRIBUTES function constructs XML attributes from the arguments. This function can be used as an argument only for the XMLELEMENT function.
+    XMLCOMMENT
+    The XMLCOMMENT function returns an XML value with a single comment node from a string expression. The content of the comment node is the value of the input string expression, mapped to Unicode (UTF-8).
+    XMLCONCAT
+    The XMLCONCAT function returns an XML sequence that contains the concatenation of a variable number of XML input arguments.
+    XMLDOCUMENT
+    The XMLDOCUMENT function returns an XML value with a single document node and zero or more nodes as its children. The content of the generated XML document node is specified by a list of expressions.
+    XMLELEMENT
+    The XMLELEMENT function returns an XML value that is an XML element node.
+    XMLFOREST
+    The XMLFOREST function returns an XML value that is a sequence of XML element nodes.
+    Start of changeXMLMODIFYEnd of change
+    The XMLMODIFY function returns an XML value that might have been modified by the evaluation of an XQuery updating expression and XQuery variables that are specified as input arguments.
+    XMLNAMESPACES
+    The XMLNAMESPACES function constructs namespace declarations from the arguments. This function can be used as an argument only for specific functions, such as the XMLELEMENT function and the XMLFOREST function.
+    XMLPARSE
+    The XMLPARSE function parses the argument as an XML document and returns an XML value.
+    XMLPI
+    The XMLPI function returns an XML value with a single processing instruction node.
+    XMLQUERY
+    The XMLQUERY function returns an XML value from the evaluation of an XQuery expression, by using specified input arguments, a context item, and XQuery variables.
+    XMLSERIALIZE
+    The XMLSERIALIZE function returns a serialized XML value of the specified data type that is generated from the first argument.
+    XMLTEXT
+    The XMLTEXT function returns an XML value with a single text node that contains the value of the argument.
+    Start of changeXMLXSROBJECTIDEnd of change
+    The XMLXSROBJECTID function returns the XSR object identifier of the XML schema that is used to validate the XML document specified in the argument.
+    YEAR
+    The YEAR function returns the year part of a value that is a character or graphic string. The value must be a valid string representation of a date or timestamp.
+
+
+###### Table functions
+
+A table function can be used only in the FROM clause of a statement. Table functions return columns of a table and resemble a table created through a CREATE TABLE statement. Table functions can be qualified with a schema name.
+    
+    ADMIN_TASK_LIST
+    The ADMIN_TASK_LIST function returns a table with one row for each of the tasks that are defined in the administrative task scheduler task list.
+    ADMIN_TASK_OUTPUT
+    For an execution of a stored procedure, the ADMIN_TASK_OUTPUT function returns the output parameter values and result sets, if available. If the task that was executed is not a stored procedure or the requested execution status is not available, the function returns an empty table.
+    ADMIN_TASK_STATUS
+    The ADMIN_TASK_STATUS function returns a table with one row for each task that is defined in the administrative task scheduler task list. Each row indicates the status of the task for the last time it was run.
+    MQREADALL
+    The MQREADALL function returns a table that contains the messages and message metadata from a specified MQSeries? location without removing the messages from the queue.
+    MQREADALLCLOB
+    The MQREADALLCLOB function returns a table that contains the messages and message metadata from a specified MQSeries location without removing the messages from the queue.
+    MQRECEIVEALL
+    The MQRECEIVEALL function returns a table that contains the messages and message metadata from a specified MQSeries location and removes the messages from the queue.
+    MQRECEIVEALLCLOB
+    The MQRECEIVEALLCLOB function returns a table that contains the messages and message metadata from a specified MQSeries location and removes the messages from the queue.
+    XMLTABLE
+    The XMLTABLE function returns a result table from the evaluation of XQuery expressions, possibly by using specified input arguments as XQuery variables. Each item in the result sequence of the row XQuery expression represents one row of the result table.
+
+## SQL ErrorCode
 
     -007
     STATEMENT CONTAINS THE ILLEGAL CHARACTER invalid-character

@@ -85,7 +85,7 @@ pre {
   font-size: 13px;
   line-height: 19px;
   overflow: auto;
-  padding: 6px 10px;
+  padding: 6px 2px;
   border-radius: 3px; }
   pre code, pre tt {
     background-color: transparent;
