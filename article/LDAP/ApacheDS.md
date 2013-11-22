@@ -9,7 +9,7 @@ ApacheDS中™是一种可扩展和嵌入的目录服务器，完全用Java编�
 * 跨平台
 
 ### 下载和安装
-#### 系统要求
+###### 系统要求
 JDK5.0+
 #### Windows下安装
 The server can be started and stopped with Windows Services manager (Control Panel > Administrative Tools > Services). You must be admin to do this.
@@ -17,7 +17,7 @@ From there, you can easily start, stop and restart Apache DS.
 作为系统服务，可以很容易的启动停止apacheDS。
 
 ### 基本配置
-#### 修改LDAP监听端口
+###### 修改LDAP监听端口
 默认情况下，LDAP Server监听端口10389(未加密或者startTLS)和10636(SSL).通用的LDAP运行在协议规定的389端口上。  
 
 1. 使用Apache Directory Studio修改端口  
@@ -29,7 +29,7 @@ From there, you can easily start, stop and restart Apache DS.
 The configuration is stored as a set of LDAP entries, so you can update one of them. In order to modify the entry containing the ports, you have first to find it, and second to send a valid modify request.  
 端口存储在entry：ads-transportid=ldap,ou=transports,ads-serverId=ldapServer,ou=servers,ads-directoryServiceId=default,ou=config
 
-#### 修改admin的密码
+###### 修改admin的密码
 admin的DN和密码：
 
     admin DN：uid=admin,ou=system 
