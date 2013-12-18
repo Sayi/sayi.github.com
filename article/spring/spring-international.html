@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="viewport"
+    content="width=device-width, initial-scale=1, user-scalable=no">
+<link rel="stylesheet" href="../../stylesheets/styles.css">
+<link rel="stylesheet" href="../../stylesheets/font-awesome.min.css">
+<link rel="stylesheet" href="../../stylesheets/page.css">
+<link href="../../javascripts/google-code-prettify/prettify.css" type="text/css" rel="stylesheet" />
+<script src="../../javascripts/google-code-prettify/prettify.js"></script>
+<title>Spring international</title>
+</head>
+<body onload="prettyPrint()" class="bg">
+<div class="fix-right-top switch-bg"><i class="icon-adjust"></i></div>
+<article>
+
+<h2 id="spring-international-locale">Spring international(locale)</h2>
+<p>Spring对国际化(本地化)的支持和Spring对Theme的支持非常的相似，本文将对国际化中涉及的几个问题逐一进行解决，并实现页面切换。  </p>
+<blockquote>
+<ol>
+<li>制作国际化资源  </li>
+<li>页面提供切换国际化语言的功能  </li>
+<li>国际化的配置，包括国际化解析器和国际化资源文件等</li>
+<li>Spring国际化标签</li>
+</ol>
+</blockquote>
+<h6 id="_1">制作国际化资源</h6>
+<p>Spring对大多数资源的处理，在默认的目标的WEB-INF\classes下(这个目录当然可以配置，也可以放在任何打包后会编译到classes下的目录，如src)，建立资源文件，如messages_en.properties、messages_zh.properties。文件内容是一些key对应相应的国际化文本。  </p>
+<pre><code>sayi.lang.zh=Chinese
+sayi.lang.en=English
+
+sayi.lang.zh=中文(Chinese)
+sayi.lang.en=英文(English)
+</code></pre>
+<h6 id="_2">页面提供切换国际化语言的功能</h6>
+<p>页面可以提供并排的几个链接，无需标识当前语言，也可以提供标识当前语言的菜单等。服务器校验名称为lang的参数请求从而确定国际化语言。这个名称的配置见下一节。</p>
+<h6 id="spring">Spring国际化配置</h6>
+<p>首先配置国际化资源文件，包括位置和前缀：  </p>
+<!--?prettify lang=xml?-->
+
+<pre><code>&lt;bean id="messageSource"
+    class="org.springframework.context.support.ReloadableResourceBundleMessageSource"&gt;
+    &lt;property name="basenames"&gt;
+        &lt;list&gt;
+            &lt;value&gt;classpath:messages&lt;/value&gt;
+        &lt;/list&gt;
+    &lt;/property&gt;
+    &lt;property name="useCodeAsDefaultMessage" value="true"&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;
+</code></pre>
+<p>属性useCodeAsDefaultMessage设置为true表示找不到对应的资源key时使用key的字符串代替国际化内容。接下来配置国际化的解析器，<code>CookieLocaleResolver</code> 或者 <code>SessionLocaleResolver</code> ,如下配置了国际化语言值存储在sayi_lang为名称的cookie中，如果该值为空，则默认使用 <code>request.getLocale()</code>的语言。</p>
+<!--?prettify lang=xml?-->
+
+<pre><code>&lt;bean id="localeResolver"
+    class="org.springframework.web.servlet.i18n.CookieLocaleResolver"&gt;
+    &lt;property name="cookieName" value="sayi_lang"&gt;&lt;/property&gt;
+&lt;/bean&gt;
+</code></pre>
+<p>最后为语言切换配置拦截器，其中paramName属性可以配置参数名称：  </p>
+<!--?prettify lang=xml?-->
+
+<pre><code>&lt;bean id="localeChangeInterceptor"
+    class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"&gt;
+    &lt;property name="paramName" value="lang" /&gt;
+&lt;/bean&gt;
+&lt;bean
+    class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"&gt;
+    &lt;property name="interceptors"&gt;
+        &lt;ref bean="localeChangeInterceptor" /&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;
+</code></pre>
+<h6 id="spring_1">Spring国际化标签</h6>
+<p>通过如上的配置，已经可以切换语言，找到对应的国际化资源文件了，页面中通过标签 <code>spring:message</code> 来完成国际化的显示  </p>
+<!--?prettify lang=html?-->
+
+<pre><code>&lt;%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%&gt;
+&lt;spring:message code='sayi.lang.zh' /&gt;
+</code></pre>
+<h2 id="_3">总结</h2>
+<p>国际化无非就是根据不同的语言选择不同的资源文件进行展示，对于一个产品来说，Javascript的国际化也是需要考虑的，通过不同语言引入不同的js国际化内容或者通过一些js框架(seaJs)来实现js国际化,在另一篇文章中有所介绍。</p>
+
+</article>
+<script src="../../javascripts/jquery-1.8.0.min.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $(".switch-bg").click(function(){
+            $("body").toggleClass("bg");
+        });
+    })
+</script>
+</body>
+</html>
