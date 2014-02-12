@@ -53,15 +53,91 @@ CAS download:[http://www.jasig.org/cas/download](http://www.jasig.org/cas/downlo
 成功看到登录页面后，由于缺省机制使用
 SimpleTestUsernamePasswordAuthenticationHandler.java来认证，所以帐号名和密码相同且不为空即可登录成功。
 
-###### JASIG CAS‎ 认证机制
+###### JASIG CAS‎ 原理
 
 
 ###### 设计自己的认证方案
+CAS初始默认的认证处理机制为SimpleTestUsernamePasswordAuthenticationHandler,显然我们需要自己的认证方案。
+通常在大规模的单点登录系统中，用户存储在LDAP服务器中是个非常好的选择，cas提供了ldap的支持插件，同样，对于DB认证的方案，cas提供了jdbc的支持插件。下面的示例以一个Properties文件存储帐号和密码来进行认证，用来说明有关的配置：  
+
+首先，新建认证的处理类：  
+
+    package cn.youthplus.cas.authentication.handler;
+
+    import java.io.FileNotFoundException;
+    import java.io.IOException;
+    import java.io.InputStream;
+    import java.util.Properties;
+
+    import org.jasig.cas.authentication.handler.AuthenticationException;
+    import org.jasig.cas.authentication.handler.support.AbstractUsernamePasswordAuthenticationHandler;
+    import org.jasig.cas.authentication.principal.UsernamePasswordCredentials;
+
+    public class PropertiesAuthenticationHandler extends
+            AbstractUsernamePasswordAuthenticationHandler {
+
+        private Properties properties = new Properties();;
+
+        public PropertiesAuthenticationHandler(String fileName) {
+            log.warn(this.getClass().getName()
+                    + " is only to be used in a testing environment.  NEVER enable this in a production environment.");
+
+            InputStream fis;
+            try {
+                fis = getClass().getResourceAsStream(fileName);
+                properties.load(fis);
+
+            } catch (FileNotFoundException e) {
+                log.error("Properties file cannot be found:" + fileName);
+            } catch (IOException e) {
+                log.error("Load Properties file failed:" + fileName);
+            }
+
+        }
+
+        @Override
+        protected boolean authenticateUsernamePasswordInternal(
+                UsernamePasswordCredentials credentials)
+                throws AuthenticationException {
+            final String username = credentials.getUsername();
+            final String password = credentials.getPassword();
+
+            if (null != properties.getProperty(username)
+                    && properties.getProperty(username).equals(password)) {
+                return true;
+            }
+            return false;
+        }
+
+    }
+
+然后，在deployerConfigContext.xml中配置这个认证处理类：
+
+    <!-- <bean 
+        class="org.jasig.cas.authentication.handler.support.SimpleTestUsernamePasswordAuthenticationHandler" /> -->
+     <bean id="propertiesAuthenticationHandler"
+        class="cn.youthplus.cas.authentication.handler.PropertiesAuthenticationHandler" >
+        <constructor-arg index="0" value="/authentic.properties" />
+    </bean>
+
+最后，在classes目录下新建文件authentic.properties，内容如下：  
+
+    sayi=123456
+
+所以，对于认证，我们可以做的多得多。
+
+
 ###### JASIG CAS‎ 认证控制台
-###### Cas server 源码开发环境
+
 ###### 扩展CAS之定制化登录页面
-###### 扩展CAS之认证
-###### 扩展CAS之
+cas的默认页面在目录WEB-INF/view/jsp/default/ui下，登录页面为casLoginView.jsp，引入了top.jsp和bottom.jsp,在页面中，区别了PC访问和手机访问的显示方式,当且是手机访问方式且加载到手机的样式css文件将显示： `${not empty requestScope['isMobile'] and not empty mobileCss}` 。
+
+###### 扩展CAS之增加前端校验
+
+###### 扩展CAS之验证码安全
+
+
+###### Cas server 源码开发环境
 
 
 
