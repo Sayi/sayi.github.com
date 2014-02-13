@@ -126,12 +126,16 @@ CAS初始默认的认证处理机制为SimpleTestUsernamePasswordAuthenticationH
 
 所以，对于认证，我们可以做的多得多。
 
-
-###### JASIG CAS‎ 认证控制台
-
 ###### JASIG CAS‎ 登录流程flow
 在了解整个登录流程中cas做了什么，我们有必要先了解一下spring web flow，当然这也不是必须的。
 
+###### JASIG CAS‎与OAuth2、WebServices
+###### JASIG CAS‎与Database
+###### JASIG CAS‎与Ldap
+###### JASIG CAS‎与restful
+###### JASIG CAS‎与echace、memchace
+
+###### JASIG CAS‎ 认证控制台
 
 ###### 扩展CAS之定制化页面
 cas的默认页面在目录WEB-INF/view/jsp/default/ui下，登录页面为casLoginView.jsp，引入了top.jsp和bottom.jsp,在页面中，区别了PC访问和手机访问的显示方式,当且是手机访问方式且加载到手机的样式css文件将显示： `${not empty requestScope['isMobile'] and not empty mobileCss}` 。  
@@ -142,11 +146,11 @@ cas的默认页面在目录WEB-INF/view/jsp/default/ui下，登录页面为casLo
 
 ###### 扩展CAS之头像
 
-###### 扩展CAS之前端校验
-
 ###### 扩展CAS之验证码安全和密码安全
 
-###### 扩展CAS之个人信息主页
+###### 扩展CAS之前端校验
+
+###### 扩展CAS之桌面客户端的单点登录
 
 
 ###### Cas server 源码开发
