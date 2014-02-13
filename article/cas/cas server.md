@@ -129,15 +129,40 @@ CAS初始默认的认证处理机制为SimpleTestUsernamePasswordAuthenticationH
 
 ###### JASIG CAS‎ 认证控制台
 
-###### 扩展CAS之定制化登录页面
-cas的默认页面在目录WEB-INF/view/jsp/default/ui下，登录页面为casLoginView.jsp，引入了top.jsp和bottom.jsp,在页面中，区别了PC访问和手机访问的显示方式,当且是手机访问方式且加载到手机的样式css文件将显示： `${not empty requestScope['isMobile'] and not empty mobileCss}` 。
-
-###### 扩展CAS之增加前端校验
-
-###### 扩展CAS之验证码安全
+###### JASIG CAS‎ 登录流程flow
+在了解整个登录流程中cas做了什么，我们有必要先了解一下spring web flow，当然这也不是必须的。
 
 
-###### Cas server 源码开发环境
+###### 扩展CAS之定制化页面
+cas的默认页面在目录WEB-INF/view/jsp/default/ui下，登录页面为casLoginView.jsp，引入了top.jsp和bottom.jsp,在页面中，区别了PC访问和手机访问的显示方式,当且是手机访问方式且加载到手机的样式css文件将显示： `${not empty requestScope['isMobile'] and not empty mobileCss}` 。  
+![](cus-login.jpg)  
+登录成功后，设定的方案是进入个人中心页面。
+
+###### 扩展CAS之多帐号选择
+
+###### 扩展CAS之头像
+
+###### 扩展CAS之前端校验
+
+###### 扩展CAS之验证码安全和密码安全
+
+###### 扩展CAS之个人信息主页
+
+
+###### Cas server 源码开发
+调试：  
+在cas3.5.2中新增类terminateWebSessionListener，在cas-servlet中配置，这个监听器是使得在web flow结束时使session过期，这就在调试的时候总是会遇到Cannot create a session after the response has been committed的异常。解决办法是1、注释掉这个监听器  
+
+    <!-- <webflow:flow-execution-listeners>
+      <webflow:listener ref="terminateWebSessionListener" />
+    </webflow:flow-execution-listeners> -->
+2.提高死亡时间值（调试中不推荐此做法）  
+
+    <bean id="terminateWebSessionListener" class="org.jasig.cas.web.flow.TerminateWebSessionListener"
+      p:serviceManagerUrl="${cas.securityContext.serviceProperties.service}" p:timeToDieInSeconds="5"/>
+基础知识
+Spring MVC
+Spring Web Flow
 
 
 
