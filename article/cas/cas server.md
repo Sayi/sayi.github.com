@@ -53,10 +53,16 @@ CAS download:[http://www.jasig.org/cas/download](http://www.jasig.org/cas/downlo
 成功看到登录页面后，由于缺省机制使用
 SimpleTestUsernamePasswordAuthenticationHandler.java来认证，所以帐号名和密码相同且不为空即可登录成功。
 
-###### JASIG CAS‎ 原理
+###### JASIG CAS‎ 原理机制
+首先通过一张图来了解一下cas的架构：  
+![](architecture.png)
+###### JASIG CAS‎ 登录流程flow
+在了解整个登录流程中cas做了什么，我们有必要先了解一下spring web flow，当然这也不是必须的。
+###### JASIG CAS‎ 安全策略
+###### JASIG CAS‎ 授权
 
 
-###### 设计自己的认证方案
+###### JASIG CAS‎ 认证方案
 CAS初始默认的认证处理机制为SimpleTestUsernamePasswordAuthenticationHandler,显然我们需要自己的认证方案。
 通常在大规模的单点登录系统中，用户存储在LDAP服务器中是个非常好的选择，cas提供了ldap的支持插件，同样，对于DB认证的方案，cas提供了jdbc的支持插件。下面的示例以一个Properties文件存储帐号和密码来进行认证，用来说明有关的配置：  
 
@@ -126,8 +132,7 @@ CAS初始默认的认证处理机制为SimpleTestUsernamePasswordAuthenticationH
 
 所以，对于认证，我们可以做的多得多。
 
-###### JASIG CAS‎ 登录流程flow
-在了解整个登录流程中cas做了什么，我们有必要先了解一下spring web flow。
+
 
 ###### JASIG CAS‎与OAuth2、WebServices
 ###### JASIG CAS‎与Database
@@ -135,7 +140,7 @@ CAS初始默认的认证处理机制为SimpleTestUsernamePasswordAuthenticationH
 ###### JASIG CAS‎与restful
 ###### JASIG CAS‎与echace、memchace
 
-###### JASIG CAS‎ 实时控制台
+###### JASIG CAS‎ 认证控制台
 
 ###### 扩展CAS之定制化页面
 cas的默认页面在目录WEB-INF/view/jsp/default/ui下，登录页面为casLoginView.jsp，引入了top.jsp和bottom.jsp,在页面中，区别了PC访问和手机访问的显示方式,当且是手机访问方式且加载到手机的样式css文件将显示： `${not empty requestScope['isMobile'] and not empty mobileCss}` 。  
@@ -144,15 +149,20 @@ cas的默认页面在目录WEB-INF/view/jsp/default/ui下，登录页面为casLo
 
 ###### 扩展CAS之多帐号选择
 
-###### 扩展CAS之头像
+###### 扩展CAS之验证码安全
+这里采用官方推荐的Jcaptcha1.0，虽然貌似已经不再开发了。通过官方资料，我们创建CaptchaImageCreateController控制器来生成图片，通过高度可配置的xml来进行配置。
+[](https://wiki.jasig.org/display/CASUM/JCAPTCHA+integration+with+CAS)  
+[](https://jcaptcha.atlassian.net/wiki/display/general/JCaptcha+and+the+SpringFramework)  
+[](https://jcaptcha.atlassian.net/wiki/display/general/ImageCaptchaEngine+components+reference)  
+以下通过每次都必须输入验证码来演示如何扩展。
+1 创建验证码图片生成控制器
+2 修改login-webflow的流程，加入验证码校验
+3 实现验证码校验
 
-###### 扩展CAS之验证码安全和密码安全
 
 ###### 扩展CAS之前端校验
-
+###### 扩展CAS之头像
 ###### 扩展CAS之桌面客户端的单点登录
-
-
 ###### Cas server 源码开发
 调试：  
 在cas3.5.2中新增类terminateWebSessionListener，在cas-servlet中配置，这个监听器是使得在web flow结束时使session过期，这就在调试的时候总是会遇到Cannot create a session after the response has been committed的异常。解决办法是1、注释掉这个监听器  
