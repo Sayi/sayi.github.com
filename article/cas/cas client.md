@@ -164,3 +164,5 @@ http://imp.wisedu.com.cn:9090/imp/admin
     %>
 
 详情获取认证用户信息请参见[官方文档及示例](https://wiki.jasig.org/display/CASC/JA-SIG+Java+Client+Simple+WebApp+Sample)
+
+## renew\gateway
