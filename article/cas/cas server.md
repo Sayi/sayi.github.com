@@ -91,11 +91,79 @@ When user wants to logout from a service, he has to call /logout URI. CAS destro
 
 ###### JASIG CAS‎ 授权Services Management 
 主要判断什么service可以访问，并对ST进行校验，ST是通过/serviceValidate服务来校验。  
-默认的服务是存在内存中的，我们可以使其持久化。
+默认的服务是存在内存中的，并且几乎没有限制,我们可以使其持久化,然后增加一些限制。  
+
     <bean
         id="serviceRegistryDao"
         class="org.jasig.cas.services.InMemoryServiceRegistryDaoImpl">
+把服务存储在JSON文件中,这应该是一个开发者不懂事的尝试,但是何乐而不为.修改配置如下:  
 
+    <bean id="serviceRegistryDao" class="cn.youthplus.cas.services.JsonServiceRegistryDaoImpl" 
+      init-method="loadServicesInJson" p:location="/WEB-INF/conf/servicesRegistry.conf" />
+JsonServiceRegistryDaoImpl类实现了接口ServiceRegistryDao,提供了增加\删除\加载\查询的功能。初始化的方法loadServicesInJson从Json文件读取服务注册服务,代码如下:  
+
+    public final List<RegisteredService> loadServicesInJson() {
+        if (null == location) {
+            location =  getWebApplicationContext().getResource(DEFAULT_LOCATION);
+        }
+        logger.info("Loading Registered Services from: [ {} ]...",
+                this.location);
+        final List<RegisteredService> resolvedServices = new ArrayList<RegisteredService>();
+
+        try {
+
+            JSONReader jsonReader = new JSONReader(new InputStreamReader(
+                    this.location.getInputStream()));
+            final Map<String, List> m = jsonReader.readObject(Map.class);
+
+            if (m != null) {
+                final Iterator<Map> i = m.get(SERVICES_KEY).iterator();
+                while (i.hasNext()) {
+                    final Map<?, ?> record = i.next();
+                    final String svcId = ((String) record.get(SERVICES_ID_KEY));
+                    final RegisteredService svc = getRegisteredServiceInstance(svcId);
+                    if (svc != null) {
+                        resolvedServices.add(JSON.toJavaObject((JSON)JSON.toJSON(record), svc.getClass()));
+                        logger.debug("Unmarshaled {}: {}", svc.getClass()
+                                .getSimpleName(), record);
+                    }
+                }
+
+                this.delegateServiceRegistryDao
+                        .setRegisteredServices(resolvedServices);
+            }
+        } catch (final Throwable e) {
+            throw new RuntimeException(e);
+        }
+        return resolvedServices;
+    }
+其中getRegisteredServiceInstance方法是获取服务的类型：普通服务还是正则匹配服务，根据不同类型获取不同服务实例。JSON文件如下：  
+
+    {
+        "services":[
+            {
+                "id":1,
+                "serviceId":"${server.prefix}/oauth2.0/callbackAuthorize",
+                "name":"HTTP",
+                "description":"Test service with ant-style pattern matching",
+            },
+
+            {
+                "id":2,
+                "serviceId":"http://www.doubannote.org/",
+                "name":"key",
+                "description":"secret",
+                "theme":"DoubanNote"
+            },
+            {
+                "id":3,
+                "serviceId":"^(https?|imaps?)://.*",
+                "name":"HTTPS or IMAPS",
+                "description":"Test service with regex-style pattern matching of any service either via HTTPS or IMAPS",
+                "evaluationOrder":3
+            }
+        ]
+    }
 
 ###### JASIG CAS‎ 票根注册TicketRegistry
 cas在TicketRegistry组件中提供了很多方式来存储Tickets。
