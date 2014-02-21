@@ -167,7 +167,7 @@ JsonServiceRegistryDaoImpl类实现了接口ServiceRegistryDao,提供了增加\�
 
 ###### JASIG CAS‎ 票根注册TicketRegistry
 cas在TicketRegistry组件中提供了很多方式来存储Tickets。
-EhcacheTicketRegistry
+如DefaultTicketRegistry(HashMap存储)、EhcacheTicketRegistry(cache存储，适用分布式环境)等。
 
 ## JASIG CAS‎ 安全
 ###### JASIG CAS‎ 安全策略-Ticket Expiration Policy
@@ -388,6 +388,7 @@ cas server支持oauth2 server，无非就是考虑对/authorize、/accessToken�
 
 
 ###### JASIG CAS‎与ehcache
+在分布式环境中，所有节点要能识别票根和校验票根，这样Ehcache-based Ticket Registry就应运而生了。
 
 ###### 扩展CAS之定制化页面
 cas的默认页面在目录WEB-INF/view/jsp/default/ui下，登录页面为casLoginView.jsp，引入了top.jsp和bottom.jsp,在页面中，区别了PC访问和手机访问的显示方式,当且是手机访问方式且加载到手机的样式css文件将显示： `${not empty requestScope['isMobile'] and not empty mobileCss}` 。  
