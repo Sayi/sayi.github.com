@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<title>Sayi</title>
+<link rel="stylesheet" href="stylesheets/styles.css">
+<link rel="stylesheet" href="stylesheets/pygment_trac.css">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, user-scalable=no">
+<!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+<style type="text/css">
+ul{
+list-style: none;
+}
+ul li{
+margin-bottom: 5px;
+font-family: 'Comic Sans MS';
+font-size: 1.1em;
+}
+h3{
+font-family: 'Comic Sans MS';
+font-size: 1.4em;
+}
+ul{
+margin: 0;
+}
+span{
+float: right;
+}
+section{
+background: url("images/backgroud.png") repeat;
+}
+header{
+/* overflow-y: auto;
+border: 1px solid #d9d9d9;
+background-color: #fff;
+-webkit-border-radius: 10px;
+-moz-border-radius: 10px;
+border-radius: 10px;
+-webkit-box-shadow: 0 1px 6px rgba(0,0,0,0.25);
+-moz-box-shadow: 0 1px 6px rgba(0,0,0,0.25);
+box-shadow: 0 1px 6px rgba(0,0,0,0.25);
+-webkit-transition: left 0.5s ease;
+-moz-transition: left 0.5s ease;
+-o-transition: left 0.5s ease;
+transition: left 0.5s ease;
+z-index: 1060; */
+}
+</style>
+</head>
+<body>
+	<div class="wrapper">
+		<header>
+			<h1>Sayi</h1>
+			<h2>青春</h2>
+			<h3>---席慕容</h3>
+			<p>
+				所有的结局都已写好 <br /> 所有的泪水也都已启程 <br /> 却忽然忘了是怎麽样的一个开始 <br />
+				在那个古老的不再回来的夏日 <br /> <br /> 无论我如何地去追索 <br /> 年轻的你只如云影掠过 <br />
+				而你微笑的面容极浅极淡 <br /> 逐渐隐没在日落后的群岚 <br /> <br /> 遂翻开那发黄的扉页 <br />
+				命运将它装订得极为拙劣 <br /> 含著泪 我一读再读 <br /> 却不得不承认 <br /> 青春是一本太仓促的书<br />
+			</p>
+			<!-- <audio src="/i/horse.ogg" >
+			</audio> -->
+			
+		</header>
+		<section>
+			<h3>Contents</h3>
+			<ul>
+				<li><a href="article/weibo/index.html">Weibo</a></li>
+				<li><a href="article/mysql/index.html">MYSQL</a></li>
+				<li><a href="article/weibo/index.html">杂文</a></li>
+				<!-- <li>
+					<ul>
+						<li><a href="javascript:;">Thinking in Java</a></li>
+						<li><a href="javascript:;">JVM</a></li>
+					</ul>
+				</li>
+				<li><a href="javascript:;">Git</a></li> -->
+			</ul>
+		</section>
+	</div>
+	<script src="javascripts/scale.fix.js"></script>
+	<script src="javascripts/jquery-1.8.0.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+
+		});
+	</script>
+
+</body>
+</html>
