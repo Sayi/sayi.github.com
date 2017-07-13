@@ -33,7 +33,7 @@ Volley是一个由Google开发的Http网络库，让Android的网络操作更简
 <p>根据sdk版本不同，Volley提供了不同的实现，基于HttpURLConnection的类<code>HurlStack</code>(sdk&gt;=9)和基于httpclient的<code>HttpClientStack</code>(sdk&lt;9)。</p>
 <p>我们可以自己实现接口，自定义请求过程中的数据。如设置请求header，定义一个固定的User-Agent值，支持URL重写规则等。</p>
 <h3>定义请求模型</h3>
-<p><img src="http://deepoove.com/images/http_request.jpg"></img><<br>
+<p><img src="http://deepoove.com/images/http_request.jpg"></img><br>
 确定了如何处理底层的HTTP请求，接下来就该考虑如何定义一个请求模型，将请求交给HttpStack进行处理。请求包含一个Url、headers、参数、method(GET\POST等)、请求Body等。</p>
 <p>熟悉Spring配置请求的方式，我们会想到是否可以用注解去表述一个请求，如注解@requestmapping、@requestheader、@requestparameter、<a href="https://github.com/post" class="user-mention">@post</a>、<a href="https://github.com/requestbody" class="user-mention">@requestbody</a>，而另一个流行的Android网络库retrofit恰恰使用了注解的方式来定义请求模型。在Volley则提供了抽象模板类<code>Request&lt;T&gt;</code>作为请求模型。</p>
 <p>Volley中的<code>Request&lt;T&gt;</code>是可排序的，即实现了Comparable接口，排序即意味着为请求优先级做好了准备。为了实现更多特性，Request除了表述一个请求该有的字段外，还拥有更多属性和方法。</p>
