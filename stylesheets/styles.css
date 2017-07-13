@@ -74,7 +74,7 @@ code{
  
 pre code {
   margin: 0;
-  padding: 0;
+  padding: 0 16px;
   white-space: pre;
   border: none;
   background: transparent; }
