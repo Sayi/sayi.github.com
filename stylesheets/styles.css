@@ -266,6 +266,9 @@ footer {
   header ul {
     display:none;
   }
+  article {
+    border: none !important;
+  }
 }
 
 @media print {
