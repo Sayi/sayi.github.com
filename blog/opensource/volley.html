@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="viewport"
+    content="width=device-width, initial-scale=1, user-scalable=no">
+<link rel="stylesheet" href="../../stylesheets/styles.css">
+<link rel="stylesheet" href="../../stylesheets/font-awesome.min.css">
+<link rel="stylesheet" href="../../stylesheets/page.css">
+<link href="../../javascripts/google-code-prettify/prettify.css" type="text/css" rel="stylesheet" />
+<script src="../../javascripts/google-code-prettify/prettify.js"></script>
+<title>Volley 源码设计</title>
+</head>
+<body onload="prettyPrint()" class="bg">
+<div class="fix-right-top switch-bg"><i class="icon-adjust"></i></div>
+<article>
+<td class="d-block comment-body markdown-body  js-comment-body"><h3>Volley是一个由Google开发的Http网络库，让Android的网络操作更简单，更快。具有以下特点：</h3>
+<blockquote>
+<ul>
+<li>自动调度网络请求</li>
+<li>并发请求</li>
+<li>与HTTP缓存头一致性的透明缓存机制</li>
+<li>支持请求的优先级</li>
+<li>支持取消请求</li>
+<li>重试机制</li>
+<li>Android异步更新UI</li>
+</ul>
+<p>本文将尝试从这些特性入手，去理解Volley的设计以及实现。</p>
+</blockquote>
+<h3>底层网络请求</h3>
+<p>设计网络库，首先要确定底层HTTP请求的处理方式。Volley提供了接口<code>HttpStack</code>，接口只有一个方法，就是处理请求，获得响应值。</p>
+<p>根据sdk版本不同，Volley提供了不同的实现，基于HttpURLConnection的类<code>HurlStack</code>(sdk&gt;=9)和基于httpclient的<code>HttpClientStack</code>(sdk&lt;9)。</p>
+<p>我们可以自己实现接口，自定义请求过程中的数据。如设置请求header，定义一个固定的User-Agent值，支持URL重写规则等。</p>
+<h3>定义请求模型</h3>
+<p>确定了如何处理底层的HTTP请求，接下来就该考虑如何定义一个请求模型，将请求交给HttpStack进行处理。请求包含一个Url、headers、参数、method(GET\POST等)、请求Body等。</p>
+<p>熟悉Spring配置请求的方式，我们会想到是否可以用注解去表述一个请求，如注解@requestmapping、@requestheader、@requestparameter、<a href="https://github.com/post" class="user-mention">@post</a>、<a href="https://github.com/requestbody" class="user-mention">@requestbody</a>，而另一个流行的Android网络库retrofit恰恰使用了注解的方式来定义请求模型。在Volley则提供了抽象模板类<code>Request&lt;T&gt;</code>作为请求模型。</p>
+<p>Volley中的<code>Request&lt;T&gt;</code>是可排序的，即实现了Comparable接口，排序即意味着为请求优先级做好了准备。为了实现更多特性，Request除了表述一个请求该有的字段外，还拥有更多属性和方法。</p>
+<ul>
+<li>定义了如何解析响应结果的抽象方法parseNetworkResponse，继承<code>Request&lt;T&gt;</code>的类实现此方法，解析对应的响应数据。</li>
+<li>注入了监听器listener，提供了deliverResponse和deliverError的方法，方便在主线程上更新UI</li>
+<li>通过字段mShouldCache来确定此请求是否是可缓存的</li>
+<li>通过字段mCanceled标识此请求是否已经取消</li>
+<li>通过枚举Priority和mSequence支持设定优先级和处理顺序</li>
+<li>设置RetryPolicy，定义了当前请求的重试策略</li>
+</ul>
+<h3>处理响应数据</h3>
+<p>在底层网络请求之上，再做一次封装，负责处理自相关的代码逻辑。这样做的目的是让底层网络请求模块可以任意替换。</p>
+<p>Volley提供了分发器<code>ResponseDelivery</code>，利用Request注册的监听器在主线程中处理响应结果。除了处理响应值，分发器还提供了一个Runnable的参数，支持在请求结束后，执行自己自定义的代码，此功能在Soft-expired cache hit时，缓存中的响应结果分发结束后，紧接着执行当前请求时有使用(需要理解Soft-expired)。</p>
+<h3>多线程并发模型</h3>
+<p>Request-Process-Response 是一个单线程的操作。支持并发的通用做法是每次请求都在一个单独线程中操作，使用线程池管理每个线程。Volley并没有使用线程池，而是常驻了四个网络调度线程(<code>NetworkDispatcher</code>)，这些线程保持阻塞状态，直到接收到新的Request。</p>
+<p>在多线程模型中，共享源数据可以使用队列。BlockingQueue是一个阻塞队列，当队列为空时，消费者线程将保持等待状态，它是线程安全的。Volley正是利用了阻塞队列的特性，将新的请求Request推入队列，四个网络调度线程(<code>NetworkDispatcher</code>)从队列中取出请求进行处理。上文提到过，Request是可排序的，所以这并不是一个FIFO队列，而是PriorityBlockingQueue，根据Request进行排序的队列。</p>
+<p>从队列中取出Request，进行网络请求调度，为了支持缓存，每个Request会优先进入另一个线程(未指明这个请求是不可缓存的)：缓存调度线程(<code>CacheDispatcher</code>)。在后台会常驻一个缓存调度线程，如果命中缓存，返回缓存内容，没有命中，则进入网络调度线程。那么问题来了，如果是同一个队列，从队列已经取出的Request进入缓存调度，如何再次进行网络调度？答案是两个队列，一个Request缓存请求队列，一个是Request网络请求队列，所以每个Request(未指明这个请求是不可缓存的)都会优先进入缓存请求队列，未命中，再次进入网络请求队列。</p>
+<p>综上，Volley将Request请求推入具有优先级的缓存阻塞队列和网络请求阻塞队列中，并且使用1个缓存调度线程和4个网络调度线程分别处理这两个队列的请求。<br>
+<a href="https://camo.githubusercontent.com/75ed938a4066e10414a8a8217dab4cc50cf3e8c2/687474703a2f2f646565706f6f76652e636f6d2f696d616765732f766f6c6c65792e706e67" target="_blank"><img src="https://camo.githubusercontent.com/75ed938a4066e10414a8a8217dab4cc50cf3e8c2/687474703a2f2f646565706f6f76652e636f6d2f696d616765732f766f6c6c65792e706e67" alt="volley.png" data-canonical-src="http://deepoove.com/images/volley.png" style="max-width:100%;"></a></p>
+<h3>缓存调度线程</h3>
+<p>缓存调度线程处理Request缓存队列。每个Request定义getCacheKey()作为缓存KEY，默认KEY(后文会提到这样的缓存KEY会带来问题)是：</p>
+<pre><code>Method:Url
+</code></pre>
+<p>缓存是否命中的逻辑如下：</p>
+<ol>
+<li>是否是个已经取消的请求，如果是，直接取消请求。</li>
+<li>通过缓存KEY是否取到缓存，如果未取到，将Request推入网络请求队列中。</li>
+<li>判断缓存内容是否过期，缓存内容包含了HTTP的缓存头信息，比如Last-Modified、ETag、Expires等。<br>
+如果过期，将Request推入网络请求队列中。<br>
+如果未过期，取缓存内容进行处理，ResponseDelivery将分发响应结果。</li>
+</ol>
+<p>默认的缓存是存在磁盘上。</p>
+<h3>网络调度线程</h3>
+<p>网络调度线程处理Request网络请求队列，队列的请求可能是应用直接推入的，也可能是缓存未命中推入的。</p>
+<p>网络调度线程做的事情很简单，在底层网络请求基础上，发送请求，封装响应结果，存入缓存，由ResponseDelivery分发结果。其中，缓存内容就包括此次响应的HTTP的缓存头信息，同时这里实现了重试机制：在一个无限循坏中，进行网络请求，如果请求成功则返回,退出循环，如果请求失败，根据失败类型判断是否重试，若不满足重试条件，则抛出异常，退出循环。所有的重试设置都是通过接口<code>RetryPolicy</code>来定义的。</p>
+<p>这里对网络请求异常做了一次封装，异常用<code>VolleyError</code>表示，返回到主线程处理。同时用户可以在Request.parseNetworkError做再一次异常封装。目前有的异常类型为：</p>
+<ul>
+<li>AuthFailureError 认证失败，状态码为401或403</li>
+<li>ClientError 状态码为[400,499]</li>
+<li>NoConnectionError 无网络连接</li>
+<li>TimeoutError 超时</li>
+<li>ServerError 服务异常</li>
+<li>NetworkError 网络异常</li>
+</ul>
+<h3>队列调度以及并发下的重复请求</h3>
+<p>我们可以通过缓存调度线程和网络调度线程处理队列数据，那么我们又如何将管理缓存队列和网络请求队列，以及优化并发下的重复请求？</p>
+<p>为了更简单，我们需要掩盖两个队列的细节，造成只有一个请求队列的假象。对用户来说，只需要定义<code>Request&lt;T&gt;</code>，然后加入这个队列即可。Volley提供了<code>RequestQueue</code>将请求分发给不同的队列，它总是会优先加入缓存队列，如果请求指定了是不可缓存的，则会推入网络请求队列。注意RequestQueue并不是一个真正的队列，而是队列调度。我们要做的就是获得RequestQueue对象，然后调用添加请求的方法即可。</p>
+<pre><code>public &lt;T&gt; Request&lt;T&gt; add(Request&lt;T&gt; request)
+</code></pre>
+<p>如果不做任何处理，并发情况下同时来了10个一样的请求，程序会如何运行？下面会是一种可能的运行方式：</p>
+<ol>
+<li>Request_seq1进入缓存队列，缓存调度线程处理Request_seq1</li>
+<li>缓存调度线程处理Request_seq1，未命中缓存，进入网络请求队列</li>
+<li>Request_seq2进入缓存队列，缓存调度线程处理</li>
+<li>缓存调度线程处理Request_seq2，未命中缓存，进入网络请求队列</li>
+<li>...</li>
+</ol>
+<p>这个运行方式已经出现了看出了问题，对于同样的请求Request_seq2并未使用到缓存，因为Request_seq1并没有处理结束，所以未产生缓存内容。</p>
+<p>Volley采用了对重复请求进行集体等待的策略，当发现已经有同样的请求在处理，就会推入等待队列，保证当前只有一个请求会被处理，直到这一个请求完成，才会唤醒等待队列中同样的请求，进入到缓存队列，所以等待队列是在缓存队列和网络请求队列前的一个保存重复请求的队列。<br>
+这里又多了一个等待队列的概念，数据结构是：</p>
+<pre><code>Map&lt;String, Queue&lt;Request&lt;?&gt;&gt;&gt;
+</code></pre>
+<p>其中map的KEY是Request的唯一标识CacheKey，Value则是重复请求的队列。</p>
+<h3>再谈Request</h3>
+<p>Volley中Request的设计是复杂的，它承担了本来不该属于一个请求的功能，杂糅了请求信息、配置信息、重试机制、响应处理等太多内容。默认提供了以下几种请求：</p>
+<ul>
+<li>StringRequest</li>
+<li>JsonObjectRequest</li>
+<li>JsonArrayRequest</li>
+<li>ImageRequest</li>
+</ul>
+<p>Request没有提供Setter方法设置请求信息，而是定义了一些列的Getter方法，在初始化Request对象的时候重写这些Getter方法。</p>
+<ul>
+<li>byte[] getBody()<br>
+post、put请求body内容</li>
+<li>String getBodyContentType()<br>
+请求body的contentType，默认为application/x-www-form-urlencoded，如果是json传输，指定为application/json</li>
+<li>Map&lt;String, String&gt; getHeaders()<br>
+请求头</li>
+<li>Map&lt;String, String&gt; getParams()<br>
+请求参数</li>
+</ul>
+<p>通过重写Getter方法定义的Request对象，有个特点，就是在初始化后，无法再进行设置操作。请求信息伴随着Request的实例化而定义完毕。如果想统一设置请求头，就要在初始化每个Request的时候重写特定方法，也可以重写底层访问请求，设置请求头。还有个方式，就是实现个基类Request，重写getHeaders()方法，前提是项目中需要设置请求头的请求都要继承重写的Request。</p>
+<p>默认Request都是可缓存的，可以显示调用setShouldCache设置此请求是否可缓存。在大多数查询的Request中，我们希望都是可缓存的，但是当我们对查询结果进行增删改后，再次查询时，往往是不希望从缓存获取，而是重新进行网络请求。大多数浏览器可以通过刷新按钮强制过滤掉缓存，重新加载数据，在Volley中，我们可以尝试删除缓存数据，通过<code>RequestQueue</code>可以取到缓存对象，通过Request可以取到CacheKey，删除就水到渠成。</p>
+<p>请求失败默认都是执行一次，如果设置了Request的RetryPolicy，可以合理的运用重试机制。<code>DefaultRetryPolicy</code>可以设置超时时间，超时次数，以及每次重试，增加超时时间的系数。</p>
+<h3>从0开始之化繁为简</h3>
+<p>化繁为简，整个流程已经简单了很多：</p>
+<ol>
+<li>定义自己的Request</li>
+<li>使用<code>RequestQueue</code>调度，启动缓存调度线程、网络调度线程</li>
+<li>网络请求，分发响应结果到Request中注册的监听器</li>
+</ol>
+<p>所有的细节仅仅需要一个好的外观去表述：队列调度和Request。忘记所有的细节，一切从0开始：</p>
+<blockquote>
+
+Volley.newRequestQueue(context).add(request);
+
+</blockquote></td>
+</article>
+<script src="../../javascripts/jquery-1.8.0.min.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $(".switch-bg").click(function(){
+            $("body").toggleClass("bg");
+        });
+    })
+</script>
+</body>
+</html>
