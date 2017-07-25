@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="viewport"
+    content="width=device-width, initial-scale=1, user-scalable=no">
+<link rel="stylesheet" href="../stylesheets/styles.css">
+<link rel="stylesheet" href="../stylesheets/font-awesome.min.css">
+<link rel="stylesheet" href="../stylesheets/page.css">
+<link href="../javascripts/google-code-prettify/prettify.css" type="text/css" rel="stylesheet" />
+<script src="../javascripts/google-code-prettify/prettify.js"></script>
+<title>Volley 源码设计</title>
+</head>
+<body onload="prettyPrint()" class="bg">
+<div class="fix-right-top switch-bg"><i class="icon-adjust"></i></div>
+<article>
+
+              <h3>编写代码，离不开命名。</h3>
+<p>在阅读源码前，不如阅读一下所有的命名。我们对两个流行的Java Library进行了简单的命名分析，以期能了解这些库的一点知识和找到一点命名趋势。</p>
+<h3><strong>guava</strong></h3>
+<p><a href="https://camo.githubusercontent.com/fa82d4a789f66e3262d462270af4f718b5ab30c7/687474703a2f2f646565706f6f76652e636f6d2f696d616765732f67756176615f7472656e64696e672e706e67" target="_blank"><img src="https://camo.githubusercontent.com/fa82d4a789f66e3262d462270af4f718b5ab30c7/687474703a2f2f646565706f6f76652e636f6d2f696d616765732f67756176615f7472656e64696e672e706e67" alt="guava_trending" data-canonical-src="http://deepoove.com/images/guava_trending.png" style="max-width:100%;"></a></p>
+<p>可以看到，这些命名体现了guava的侧重点。<br>
+命名中大多数含有Map、Set、List、Collection，同时拥有61个Immutable字符的名字，体现了guava对集合操作进行了大量的扩展。</p>
+<p>62次Abstract表明了Guava中有着大量的抽象类。<br>
+173次Test排首位，可以看出测试用例覆盖广泛(我相信一个好的库，Test出现的频率一定也是最高的)。</p>
+<h3><strong>spring-framework</strong></h3>
+<p><a href="https://camo.githubusercontent.com/75ae84fa4765ab251dbfa8823996acf744bc0276/687474703a2f2f646565706f6f76652e636f6d2f696d616765732f737072696e675f7472656e64696e672e706e67" target="_blank"><img src="https://camo.githubusercontent.com/75ae84fa4765ab251dbfa8823996acf744bc0276/687474703a2f2f646565706f6f76652e636f6d2f696d616765732f737072696e675f7472656e64696e672e706e67" alt="spring_trending" data-canonical-src="http://deepoove.com/images/spring_trending.png" style="max-width:100%;"></a></p>
+<p>1804次Test验证了<strong>一个好的库，Test出现的频率一定也是最高</strong>。<br>
+370次Factory说明用了大量的工厂，330次Abstract有着不少的抽象类。<br>
+Resolve和Annotation表明默认自带了很多注解。<br>
+Message、Transaction、Converter、Resource、Interceptor等则体现了某方面的一些特性。</p>
+<p>我们通常会考虑什么样的名字才是能准确表达含义，什么样的名字才是业界标准，什么样的名字能反应设计，什么样的名字才是好的名字？</p>
+<p>我相信，好名字一定是好设计的前提。</p>
+<blockquote>
+<p>NameTrending提供了简要统计命名趋势的功能<br>
+源码：<a href="https://github.com/Sayi/NameTrending">GitHub NameTrending</a></p>
+</blockquote>
+          
+</article>
+<script src="../javascripts/jquery-1.8.0.min.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $(".switch-bg").click(function(){
+            $("body").toggleClass("bg");
+        });
+    })
+</script>
+</body>
+</html>
